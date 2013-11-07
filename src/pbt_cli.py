@@ -1,5 +1,6 @@
 """CLI entry point"""
 import pbt
+import pbt_core_commands
 
 USAGE = """Usage: {command} <command> [<command-arg>*]
 
@@ -17,4 +18,4 @@ def run(args):
         print(format_usage(args[0]))
     else:
         _, command, *command_args = args
-        pbt.run(command, commad_args)
+        pbt.run(command, command_args)

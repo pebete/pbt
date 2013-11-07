@@ -46,6 +46,18 @@ class ProjectSettings:
         self.target_path = os.path.normpath(target_path)
         self.python_versions = python_versions
 
+    def to_data(self):
+        """return a data representation of the object"""
+        return dict(min_version=self.min_version, plugins=self.plugins,
+                repositories=self.repositories,
+                plugin_repositories=self.plugin_repositories,
+                entry_point=self.entry_point, python_cmd=self.python_cmd,
+                python_opts=self.python_opts, source_paths=self.source_paths,
+                test_paths=self.test_paths,
+                resource_paths=self.resource_paths,
+                target_path=self.target_path,
+                python_versions=self.python_versions)
+
 class Project:
     """contains information about the project"""
     def __init__(self, organization, name, version, description, url, license,
@@ -60,6 +72,14 @@ class Project:
         self.authors = authors
         self.dependencies = dependencies
         self.settings = settings
+
+    def to_data(self):
+        """return a data representation of the object"""
+        return dict(organization=self.organization, name=self.name,
+                version=self.version, description=self.description,
+                url=self.url, license=self.license, authors=self.authors,
+                dependencies=self.dependencies,
+                settings=self.settings.to_data())
 
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
@@ -113,7 +133,6 @@ class Context:
     def load_project(self, basepath="."):
         """loads the project description and related information from
         project.pbt, raise ProjectNotFoundError if no project.pbt is found"""
-        # TODO: implement
         for dirname in pbt_util.get_dirs_up_to_root(basepath):
             project_path = os.path.join(dirname, self.project_descriptor_name)
             self.log.debug("Looking for '{}'".format(project_path))
@@ -141,12 +160,43 @@ class Context:
             raise CommandNotFoundError(command_name)
 
     def get_command_handler(self, command_name):
+        """return the handler associated with a command name, raise
+        CommandNotFoundError if not found"""
         if self.is_command(command_name):
             command_handler = self.commands[command_name][0]
             return command_handler
         else:
             raise CommandNotFoundError(command_name)
 
+    def get_command_names(self):
+        """return an iter of all the registered commands"""
+        return sorted(self.commands.keys())
+
+    def get_command_description(self, command_name):
+        """return the first line of the command docstring if found, if not
+        found raise CommandNotFoundError"""
+        if self.is_command(command_name):
+            handler = self.get_command_handler(command_name)
+            doc = handler.__doc__
+            if doc is None:
+                return "No description"
+            else:
+                return doc.split("\n")[0].strip()
+        else:
+            raise CommandNotFoundError(command_name)
+
+    def get_command_docs(self, command_name):
+        """return the command's docstring if found, if not
+        found raise CommandNotFoundError"""
+        if self.is_command(command_name):
+            handler = self.get_command_handler(command_name)
+            doc = handler.__doc__
+            if doc is None:
+                return "No description"
+            else:
+                return doc.strip()
+        else:
+            raise CommandNotFoundError(command_name)
     def register_command(self, name, command_handler, runs_in_project):
         """register a function to be called when command named *name* is
         called"""
@@ -162,7 +212,7 @@ class Context:
         runs_in_project: if True context will look for a project.pbt, load it
         and pass it to the command and fail if not in a project. If False
         it won't try to load a project for the command
-        
+
         name: command name, if not set it will use the name of the function"""
 
         def outter(command_handler):

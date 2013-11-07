@@ -37,6 +37,23 @@ def identity_command(ctx, args, project):
     "return the args that are received"
     return ctx, args, project
 
+@command(runs_in_project=False, name="no-help")
+def no_help(ctx, args):
+    pass
+
+@command(runs_in_project=False, name="just-description")
+def just_description(ctx, args):
+    """this command has just a description"""
+    pass
+
+@command(runs_in_project=False, name="full-docs")
+def full_docs(ctx, args):
+    """this command not only has just a description
+    
+    but also some extended documentation
+    and this is the last line"""
+    pass
+
 class PbtTestCase(unittest.TestCase):
 
     def test_command_not_found_error_str(self):
@@ -200,6 +217,35 @@ class PbtTestCase(unittest.TestCase):
         self.assertEqual(settings.target_path, "target")
         self.assertEqual(settings.python_versions,
                 ["2.6", "2.7", "3.3", "3.4", ["pypy", "2.1"]])
+
+    def test_get_command_description_no_help(self):
+        description = global_ctx.get_command_description("no-help")
+        self.assertEqual(description, "No description")
+
+        docs = global_ctx.get_command_docs("no-help")
+        self.assertEqual(docs, "No description")
+
+    def test_get_command_description_just_description(self):
+        description = global_ctx.get_command_description("just-description")
+        self.assertEqual(description, "this command has just a description")
+
+        docs = global_ctx.get_command_docs("just-description")
+        self.assertEqual(docs, "this command has just a description")
+
+    def test_get_command_description_full_docs(self):
+        description = global_ctx.get_command_description("full-docs")
+        self.assertEqual(description,
+                "this command not only has just a description")
+
+        docs = global_ctx.get_command_docs("full-docs")
+        self.assertEqual(docs, full_docs.__doc__)
+
+    def test_get_command_description_fails_if_not_found(self):
+        self.assertRaises(CommandNotFoundError,
+                global_ctx.get_command_description, "not-existing")
+
+        self.assertRaises(CommandNotFoundError,
+                global_ctx.get_command_docs, "not-existing")
 
 if __name__ == "__main__":
     unittest.main()
