@@ -20,23 +20,89 @@ idea is that you can tweak every aspect if you need it.
 how?
 ----
 
-draft for now since it's not done yet::
+::
+
+    # list of registered command
 
     pbt help
 
-    # list of registered commands here
+    # help for dump command
 
-    pbt help command
+    pbt help dump
 
-    # help for command here
+    # dump of all the information about the current project
 
     pbt dump
 
-    # dump of all the information about the current project here
+    # run <command> passing args
 
     pbt <command> [<arg>*]
 
-    # result of running <command> passing args
+examples
+--------
+
+::
+
+    $ pwd
+
+    /home/mariano/src/pbt/test/data
+
+    $ ../../src/pbt help
+
+    Pbt is a tool for working with Python projects.
+
+    Several tasks are available:
+
+    dump             dumps all project configuration for the current project
+    help             show commands' descriptions or command help if command specified
+
+    $ ../../src/pbt help help
+
+    show commands' descriptions or command help if command specified
+
+        pbt help         - displays all available commands with a brief description
+        pbt help command - displays detailed help about a command
+
+    $ ../../src/pbt help dump
+
+    dumps all project configuration for the current project
+
+        This commands prints back all the information about the project
+        that it knows, it serves as a tool to diagnose configuration problems
+        and also as an example for a minimal project command
+
+    $ ../../src/pbt dump
+
+    authors: [Mariano Guerra <mariano@marianoguerra>, x-ip, joac, L1pe]
+    dependencies:
+    - [org.python, requests, 2.0.0]
+    description: python build tool
+    license: {name: Apache 2.0, url: 'http://opensource.org/licenses/Apache-2.0'}
+    name: pbt
+    organization: pebete
+    settings:
+      entry_point: [src/pbt_cli.py, run]
+      min_version: 0.0.1
+      plugin_repositories:
+      - [pypi, 'http:/pypi.python.org/']
+      plugins:
+      - [marianoguerra, sphinx, 1.0.0]
+      python_cmd: ~/bin/pypy
+      python_opts: [-tt]
+      python_versions:
+      - '2.6'
+      - '2.7'
+      - '3.3'
+      - '3.4'
+      - [pypy, '2.1']
+      repositories:
+      - [pypi, 'http:/pypi.python.org/']
+      resource_paths: [resources]
+      source_paths: [src]
+      target_path: target
+      test_paths: [test]
+    url: https://github.com/pebete/pbt
+    version: 0.0.1
 
 how to implement commands?
 --------------------------
