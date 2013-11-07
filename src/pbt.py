@@ -49,7 +49,7 @@ class ProjectSettings:
 class Project:
     """contains information about the project"""
     def __init__(self, organization, name, version, description, url, license,
-            authors, dependencies):
+            authors, dependencies, settings):
 
         self.organization = organization
         self.name = name
@@ -59,6 +59,7 @@ class Project:
         self.license = license
         self.authors = authors
         self.dependencies = dependencies
+        self.settings = settings
 
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
@@ -76,18 +77,6 @@ class Context:
 
         with open(path) as file_in:
             data = yaml.load(file_in)
-
-        organization = data.get("organization", "no-organization")
-        name = data.get("name", "no-name")
-        version = data.get("version", "no-version")
-        description = data.get("description", "No description")
-        url = data.get("url", "No url")
-        license = data.get("license", "No license")
-        authors = data.get("authors", [])
-        dependencies = data.get("dependencies", [])
-
-        project = Project(organization, name, version, description, url,
-                license, authors, dependencies)
 
         min_version = data.get("min_version", "0.0.1")
         plugins = data.get("plugins", [])
@@ -107,7 +96,19 @@ class Context:
                 source_paths, test_paths, resource_paths, target_path,
                 python_versions)
 
-        return project, settings
+        organization = data.get("organization", "no-organization")
+        name = data.get("name", "no-name")
+        version = data.get("version", "no-version")
+        description = data.get("description", "No description")
+        url = data.get("url", "No url")
+        license = data.get("license", "No license")
+        authors = data.get("authors", [])
+        dependencies = data.get("dependencies", [])
+
+        project = Project(organization, name, version, description, url,
+                license, authors, dependencies, settings)
+
+        return project
 
     def load_project(self, basepath="."):
         """loads the project description and related information from

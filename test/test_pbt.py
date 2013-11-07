@@ -92,7 +92,8 @@ class PbtTestCase(unittest.TestCase):
         ctx = Context(log=log)
         path = os.path.join(TEST_DATA_DIR, "null_project",
                 ctx.project_descriptor_name)
-        project, settings = ctx.parse_project_descriptor(path)
+        project = ctx.parse_project_descriptor(path)
+        settings = project.settings
         
         self.assertEqual(project.organization, "no-organization")
         self.assertEqual(project.name, "no-name")
@@ -120,7 +121,8 @@ class PbtTestCase(unittest.TestCase):
         log = FakeLogger()
         ctx = Context(log=log)
         path = os.path.join(TEST_DATA_DIR, ctx.project_descriptor_name)
-        project, settings = ctx.parse_project_descriptor(path)
+        project = ctx.parse_project_descriptor(path)
+        settings = project.settings
         
         self.assertEqual(project.organization, "pebete")
         self.assertEqual(project.name, "pbt")
