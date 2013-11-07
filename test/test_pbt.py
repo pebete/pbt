@@ -32,6 +32,11 @@ def reverse_with_name(ctx, args):
     """command that takes some args and returns them reversed"""
     return list(reversed(args))
 
+@command(name="identity")
+def identity_command(ctx, args, project):
+    "return the args that are received"
+    return ctx, args, project
+
 class PbtTestCase(unittest.TestCase):
 
     def test_command_not_found_error_str(self):
@@ -73,6 +78,47 @@ class PbtTestCase(unittest.TestCase):
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0], 2)
         self.assertEqual(result[1], 1)
+
+    def test_run_project_command(self):
+        ctx = global_ctx
+        path = os.path.join(TEST_DATA_DIR, ctx.project_descriptor_name)
+        cx, args, project = ctx.run("identity", [1, 2], path)
+        settings = project.settings
+
+        self.assertEqual(args, [1, 2])
+        self.assertIs(ctx, cx)
+
+        self.assertEqual(project.organization, "pebete")
+        self.assertEqual(project.name, "pbt")
+        self.assertEqual(project.version, "0.0.1")
+        self.assertEqual(project.description, "python build tool")
+        self.assertEqual(project.url, "https://github.com/pebete/pbt")
+        self.assertEqual(project.license,
+                {"name": "Apache 2.0",
+                 "url": "http://opensource.org/licenses/Apache-2.0"})
+        self.assertEqual(project.authors,
+                ["Mariano Guerra <mariano@marianoguerra>", "x-ip", "joac",
+                    "L1pe"])
+        self.assertEqual(project.dependencies,
+                [["org.python", "requests", "2.0.0"]])
+
+        self.assertEqual(settings.min_version, "0.0.1")
+        self.assertEqual(settings.plugins,
+                [["marianoguerra", "sphinx", "1.0.0"]])
+        self.assertEqual(settings.repositories,
+                [["pypi", "http:/pypi.python.org/"]])
+        self.assertEqual(settings.plugin_repositories,
+                [["pypi", "http:/pypi.python.org/"]])
+        self.assertEqual(settings.entry_point, ["src/pbt_cli.py", "run"])
+        self.assertEqual(settings.python_cmd, "~/bin/pypy")
+        self.assertEqual(settings.python_opts, ["-tt"])
+        self.assertEqual(settings.source_paths, ["src"])
+        self.assertEqual(settings.test_paths, ["test"])
+        self.assertEqual(settings.resource_paths, ["resources"])
+        self.assertEqual(settings.target_path, "target")
+        self.assertEqual(settings.python_versions,
+                ["2.6", "2.7", "3.3", "3.4", ["pypy", "2.1"]])
+
 
     def test_load_project_fails_when_not_found(self):
         log = FakeLogger()

@@ -127,13 +127,13 @@ class Context:
         """returns True if command is registered, False otherwise"""
         return command_name in self.commands
 
-    def run(self, command_name, args):
+    def run(self, command_name, args, basepath="."):
         """look for a registered command named *command* call it with *args*
         if found, raise *CommandNotFoundError* if not found"""
         if self.is_command(command_name):
             command_handler, runs_in_project = self.commands[command_name]
             if runs_in_project:
-                project = self.load_project()
+                project = self.load_project(basepath)
                 return command_handler(self, args, project)
             else:
                 return command_handler(self, args)
