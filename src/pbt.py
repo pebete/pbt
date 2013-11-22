@@ -135,8 +135,15 @@ class Context:
                 plugin_dir = os.path.join(plugins_dir_path, dirname)
                 entry_point = os.path.join(plugin_dir, "main.py")
                 try:
-                    imp.load_source(mod_name, entry_point)
-                    modules.append(plugin_dir)
+                    plugin = imp.load_source(mod_name, entry_point)
+                    entry_fun = getattr(plugin, "on_load", None)
+
+                    if entry_fun:
+                        entry_fun(self, plugin_dir)
+                    else:
+                        self.log.warn("Plugin %s has no on_load" % mod_name)
+
+                    modules.append(plugin)
                 except Exception as error:
                     errors.append(error)
 
