@@ -1,7 +1,9 @@
 """pbt main API"""
 import os
+import imp
 import yaml
 import logging
+import xdg.BaseDirectory
 
 import pbt_util
 
@@ -84,13 +86,65 @@ class Project:
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
 
+logging.basicConfig()
 class Context:
     """contains all the information to run pbt commands"""
 
-    def __init__(self, log=None):
+    def __init__(self, log=None, env=None):
+        self.env = env if env is not None else os.environ
         self.commands = {}
-        self.log = log if log is not None else logging.getLogger()
+        self.log = log if log is not None else logging.getLogger("pbt")
+
+        if log is None:
+            log_file = self.env.get("PBT_LOG_FILE")
+            if log_file:
+                self.log.addHandler(logging.FileHandler(log_file))
+            else:
+                self.log.addHandler(logging.StreamHandler())
+
+            if self.env.get("PBT_DEBUG"):
+                self.log.setLevel(logging.DEBUG)
+            else:
+                self.log.setLevel(logging.INFO)
+
         self.project_descriptor_name = "project.pbt"
+        self._config_dir_path = None
+
+    @property
+    def config_dir_path(self):
+        """return the config_dir_path for this context, ensure it exists
+        and initialize it the first time it's required"""
+        if self._config_dir_path is None:
+            xdg.BaseDirectory.save_config_path("pbt")
+            path = xdg.BaseDirectory.load_first_config("pbt")
+            self._config_dir_path = path
+
+        return self._config_dir_path
+
+    def load_plugins(self, plugins_dir_path=None):
+        """return the path to the plugins folder"""
+        if plugins_dir_path is None:
+            plugins_dir_path = self.join_config("plugins")
+
+        errors = []
+        modules = []
+        if os.path.isdir(plugins_dir_path):
+            _dirpath, dirnames, _filenames = next(os.walk(plugins_dir_path))
+            for dirname in dirnames:
+                mod_name = os.path.basename(dirname)
+                plugin_dir = os.path.join(plugins_dir_path, dirname)
+                entry_point = os.path.join(plugin_dir, "main.py")
+                try:
+                    imp.load_source(mod_name, entry_point)
+                    modules.append(plugin_dir)
+                except Exception as error:
+                    errors.append(error)
+
+        return modules, errors
+
+    def join_config(self, *parts):
+        """join parts with the config dir path as base"""
+        return os.path.join(self.config_dir_path, *parts)
 
     def parse_project_descriptor(self, path):
         """parse a project descriptor from path and return it"""
@@ -149,6 +203,16 @@ class Context:
     def run(self, command_name, args, basepath="."):
         """look for a registered command named *command* call it with *args*
         if found, raise *CommandNotFoundError* if not found"""
+        self.log.debug("Loading plugins")
+        plugins_loaded, errors = self.load_plugins()
+
+        if errors:
+            for error in errors:
+                self.log.warn("Error loading plugin %s" % str(error))
+
+        for plugin_path in plugins_loaded:
+            self.log.debug("Plugin loaded %s" % plugin_path)
+
         if self.is_command(command_name):
             command_handler, runs_in_project = self.commands[command_name]
             if runs_in_project:

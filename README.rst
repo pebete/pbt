@@ -144,6 +144,14 @@ help".
 the following lines if provided are the command help that will be displayed when
 requiring the detailed help when running "pbt help command".
 
+dependencies
+------------
+
+yes, this will be later in the project.yaml
+
+* cookicutter
+* xdg
+
 license
 -------
 
