@@ -58,7 +58,7 @@ def main(ctx, args):
     try:
         cookiecutter.cookiecutter(args[0])
     except FileNotFoundError as err:
-        if "No such file or directory: 'git'" in err.strerror:
+        if "'git'" in err.strerror:
             print("Git version control application is needed for this action, "
                   "please install it, see instructions at http://git-scm.com/downloads")
         else:
