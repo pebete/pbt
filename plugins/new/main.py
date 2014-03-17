@@ -30,7 +30,7 @@ def main(ctx, args):
     pbt new [TEMPLATE] [list]
 
     in the template option you can put the name of a predefined templates or
-    the link of a git/mercurial repo thats holds your custom template.
+    the link of a git/mercurial repo that holds your custom template.
 
     """
     # TODO: find a fuzzy, offline way of listing and finding templates
@@ -62,4 +62,4 @@ def main(ctx, args):
             print("Git version control application is needed for this action, "
                   "please install it, see instructions at http://git-scm.com/downloads")
         else:
-            raise(err)
+            raise
