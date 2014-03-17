@@ -48,7 +48,7 @@ def main(ctx, args):
                 break
     else:
         args.append(TEMPLATES[0]["link"])
-    import ipdb; ipdb.set_trace()
+
     try:
         import cookiecutter.main as cookiecutter
     except ImportError:
