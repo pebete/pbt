@@ -84,6 +84,39 @@ class PbtTestCase(unittest.TestCase):
         expected = os.path.expanduser(ctx.registry_url + "new/templates.json")
         self.assertEqual(url, expected)
 
+    def test_build_url_plugin_file_path(self):
+        ctx = Context()
+        url = ctx.url_to_plugin_file("new", "templates.json")
+        expected = os.path.expanduser(ctx.registry_url + "new/templates.json")
+        self.assertEqual(url, expected)
+
+    def test_fetch_plugin_file(self):
+        ctx = Context()
+        resulting_dirname = []
+        resulting_url = [] 
+        resulting_path = []
+
+        def dummy_ensure_dir_exists(dirname):
+            resulting_dirname.append(dirname)
+
+        def dummy_fetch_resource(url, path):
+            resulting_url.append(url)
+            resulting_path.append(path)
+
+        ctx.ensure_dir_exists = dummy_ensure_dir_exists
+        ctx.fetch_resource = dummy_fetch_resource
+        expected_path = ctx.path_to_plugin_file("new", "templates.json")
+        expected_url = ctx.url_to_plugin_file("new", "templates.json")
+
+        url, path = ctx.fetch_plugin_file("new", "templates.json")
+
+        self.assertEqual(path, expected_path)
+        self.assertEqual(url, expected_url)
+
+        self.assertEqual(resulting_url[0], expected_url)
+        self.assertEqual(resulting_path[0], expected_path)
+        self.assertEqual(resulting_dirname[0], os.path.dirname(expected_path))
+
     def test_overriding_command_warns(self):
         log = FakeLogger()
         ctx = Context(log=log)

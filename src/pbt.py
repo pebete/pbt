@@ -2,6 +2,7 @@
 import os
 import imp
 import yaml
+import urllib
 import logging
 import xdg.BaseDirectory
 
@@ -125,10 +126,35 @@ class Context:
         return self._config_dir_path
 
     def path_to_plugin_file(self, plugin_name, *path):
+        """return the path to a resource from a plugin"""
         return os.path.join(self.config_dir_path, "plugins", plugin_name, *path)
 
     def url_to_plugin_file(self, plugin_name, *path):
+        """return the url to a resource from a plugin"""
         return self.registry_url + plugin_name + "/" + "/".join(path)
+
+    def fetch_resource(self, url, path):
+        """fetch a resource from a url and store it in path"""
+        urllib.urlretrieve(url, path)
+
+    def ensure_dir_for_file_exists(self, path):
+        """ensure directory for file exists, if not create it"""
+        dirname = os.path.dirname(path)
+        self.ensure_dir_exists(dirname)
+
+    def ensure_dir_exists(self, dirname):
+        """ensure directory exists, if not create it"""
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
+    def fetch_plugin_file(self, plugin_name, *path):
+        """fetch a resource from a plugin from the registry and store it
+        in the local path for that resource"""
+        url = self.url_to_plugin_file(plugin_name, *path)
+        path = self.path_to_plugin_file(plugin_name, *path)
+        self.ensure_dir_for_file_exists(path)
+        self.fetch_resource(url, path)
+        return url, path
 
     def load_plugins(self, plugins_dir_path=None):
         """return the path to the plugins folder"""
