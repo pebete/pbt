@@ -86,6 +86,7 @@ class Project:
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
 
+DEFAULT_REGISTRY_URL = "https://raw.github.com/pebete/registry/master/plugins/"
 logging.basicConfig()
 class Context:
     """contains all the information to run pbt commands"""
@@ -94,6 +95,8 @@ class Context:
         self.env = env if env is not None else os.environ
         self.commands = {}
         self.log = log if log is not None else logging.getLogger("pbt")
+        self.registry_url = self.env.get("PBT_REGISTRY_URL",
+                DEFAULT_REGISTRY_URL)
 
         if log is None:
             log_file = self.env.get("PBT_LOG_FILE")
@@ -123,6 +126,9 @@ class Context:
 
     def path_to_plugin_file(self, plugin_name, *path):
         return os.path.join(self.config_dir_path, "plugins", plugin_name, *path)
+
+    def url_to_plugin_file(self, plugin_name, *path):
+        return self.registry_url + plugin_name + "/" + "/".join(path)
 
     def load_plugins(self, plugins_dir_path=None):
         """return the path to the plugins folder"""

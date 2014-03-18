@@ -78,6 +78,12 @@ class PbtTestCase(unittest.TestCase):
         expected = os.path.expanduser("~/.config/pbt/plugins/new/templates.json")
         self.assertEqual(path, expected)
 
+    def test_build_url_plugin_file_path(self):
+        ctx = Context()
+        url = ctx.url_to_plugin_file("new", "templates.json")
+        expected = os.path.expanduser(ctx.registry_url + "new/templates.json")
+        self.assertEqual(url, expected)
+
     def test_overriding_command_warns(self):
         log = FakeLogger()
         ctx = Context(log=log)
