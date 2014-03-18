@@ -121,6 +121,9 @@ class Context:
 
         return self._config_dir_path
 
+    def path_to_plugin_file(self, plugin_name, *path):
+        return os.path.join(self.config_dir_path, "plugins", plugin_name, *path)
+
     def load_plugins(self, plugins_dir_path=None):
         """return the path to the plugins folder"""
         if plugins_dir_path is None:

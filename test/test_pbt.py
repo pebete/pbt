@@ -1,4 +1,5 @@
 """test for pbt.py"""
+import os
 import sys
 sys.path.append("src")
 from pbt import *
@@ -70,6 +71,12 @@ class PbtTestCase(unittest.TestCase):
 
         self.assertIs(ctx.get_command_handler("reverse"), reverse)
         self.assertIs(ctx.get_command_handler("reverse1"), reverse_with_name)
+
+    def test_build_plugin_file_path(self):
+        ctx = Context()
+        path = ctx.path_to_plugin_file("new", "templates.json")
+        expected = os.path.expanduser("~/.config/pbt/plugins/new/templates.json")
+        self.assertEqual(path, expected)
 
     def test_overriding_command_warns(self):
         log = FakeLogger()
