@@ -171,7 +171,7 @@ class Context:
         """load plugins and return loaded modules and errors"""
         plugins_dir_paths =  self.plugins_dir_paths
 
-        self.log.debug("looking for plugins in", ":".join(plugins_dir_paths))
+        self.log.debug("looking for plugins in %s", ":".join(plugins_dir_paths))
         errors = []
         modules = []
         for plugins_dir_path in plugins_dir_paths:
