@@ -161,7 +161,7 @@ class Context:
         """return the list of places to look for plugins"""
 
         paths = self.env.get("PBT_PLUGINS_PATH", "")
-        result = [path.strip() for path in paths.split(":") if path.strip()]
+        result = [os.path.abspath(path.strip()) for path in paths.split(":") if path.strip()]
 
         result.insert(0, self.join_config("plugins"))
 
