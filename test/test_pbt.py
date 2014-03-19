@@ -327,6 +327,19 @@ class PbtTestCase(unittest.TestCase):
             os.path.abspath("foo"), os.path.abspath("bar"),
             os.path.abspath("baz")])
 
+    def test_on_load_decorator_works(self):
+        ctx = Context(env={})
+        params = []
+
+        @ctx.run_on_load
+        def my_on_load(ctx, path):
+            params.append((ctx, path))
+
+        self.assertEqual(ctx.on_load_functions, [my_on_load])
+
+        ctx.run_on_load_functions()
+        self.assertEqual(params, [(ctx, os.path.abspath(__file__))])
+
 
 
 if __name__ == "__main__":

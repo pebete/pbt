@@ -95,6 +95,7 @@ class Context:
     def __init__(self, log=None, env=None):
         self.env = env if env is not None else os.environ
         self.commands = {}
+        self.on_load_functions = []
         self.log = log if log is not None else logging.getLogger("pbt")
         self.registry_url = self.env.get("PBT_REGISTRY_URL",
                 DEFAULT_REGISTRY_URL)
@@ -183,13 +184,6 @@ class Context:
                     entry_point = os.path.join(plugin_dir, "main.py")
                     try:
                         plugin = imp.load_source(mod_name, entry_point)
-                        entry_fun = getattr(plugin, "on_load", None)
-
-                        if entry_fun:
-                            entry_fun(self, plugin_dir)
-                        else:
-                            self.log.warning("Plugin %s has no on_load" % mod_name)
-
                         modules.append(plugin)
                     except Exception as error:
                         errors.append(error)
@@ -254,11 +248,19 @@ class Context:
         """returns True if command is registered, False otherwise"""
         return command_name in self.commands
 
+    def run_on_load_functions(self):
+        for function in self.on_load_functions:
+            self.log.debug("Running on load function: %s", function)
+            function_dir_path = os.path.abspath(function.__code__.co_filename)
+            function(self, function_dir_path)
+
     def run(self, command_name, args, basepath="."):
         """look for a registered command named *command* call it with *args*
         if found, raise *CommandNotFoundError* if not found"""
         self.log.debug("Loading plugins")
         plugins_loaded, errors = self.load_plugins()
+        self.log.debug("Running on load functions")
+        self.run_on_load_functions()
 
         if errors:
             for error in errors:
@@ -325,6 +327,14 @@ class Context:
 
         self.commands[name] = (command_handler, runs_in_project)
 
+    def run_on_load(self, function):
+        """decorator to declare a function that should be run at pbt load
+        time right after all plugins have been loaded"""
+
+        self.on_load_functions.append(function)
+
+        return function
+
     def command(self, runs_in_project=True, name=None):
         """decorator to declare a function that is a pbt command
         runs_in_project: if True context will look for a project.pbt, load it
@@ -357,4 +367,8 @@ def run(command_name, args):
 def command(runs_in_project=True, name=None):
     """convenience function to wrap a command on the global context"""
     return global_ctx.command(runs_in_project, name)
+
+def run_on_load(function):
+    """convenience function to wrap a on load function on the global context"""
+    return global_ctx.run_on_load(function)
 
