@@ -220,6 +220,13 @@ as you can see the plugin registered a command which is listed, let's run it::
 
 and that's almost all there's to writing a plugin
 
+testing
+-------
+
+to run pbt core tests run from pbt base folder::
+
+    python3 -m unittest discover -s test
+
 dependencies
 ------------
 
