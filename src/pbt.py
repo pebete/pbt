@@ -187,7 +187,7 @@ class Context:
                         if entry_fun:
                             entry_fun(self, plugin_dir)
                         else:
-                            self.log.warn("Plugin %s has no on_load" % mod_name)
+                            self.log.warning("Plugin %s has no on_load" % mod_name)
 
                         modules.append(plugin)
                     except Exception as error:
@@ -261,7 +261,7 @@ class Context:
 
         if errors:
             for error in errors:
-                self.log.warn("Error loading plugin %s" % str(error))
+                self.log.warning("Error loading plugin %s" % str(error))
 
         for plugin_path in plugins_loaded:
             self.log.debug("Plugin loaded %s" % plugin_path)
