@@ -147,8 +147,9 @@ requiring the detailed help when running "pbt help command".
 dependencies
 ------------
 
-yes, this will be later in the project.yaml
+yes, this will be later in the project.pbt
 
+* yaml
 * cookicutter
 * xdg
 
