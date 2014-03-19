@@ -254,9 +254,9 @@ class Context:
             function_dir_path = os.path.abspath(function.__code__.co_filename)
             function(self, function_dir_path)
 
-    def run(self, command_name, args, basepath="."):
-        """look for a registered command named *command* call it with *args*
-        if found, raise *CommandNotFoundError* if not found"""
+    def initial_setup(self):
+        """do initial setup, useful to run when testing a plugin or before
+        running a command"""
         self.log.debug("Loading plugins")
         plugins_loaded, errors = self.load_plugins()
         self.log.debug("Running on load functions")
@@ -268,6 +268,12 @@ class Context:
 
         for plugin_path in plugins_loaded:
             self.log.debug("Plugin loaded %s" % plugin_path)
+
+
+    def run(self, command_name, args, basepath="."):
+        """look for a registered command named *command* call it with *args*
+        if found, raise *CommandNotFoundError* if not found"""
+        self.initial_setup()
 
         if self.is_command(command_name):
             command_handler, runs_in_project = self.commands[command_name]

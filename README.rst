@@ -227,6 +227,18 @@ to run pbt core tests run from pbt base folder::
 
     python3 -m unittest discover -s test
 
+testing your plugin
+:::::::::::::::::::
+
+first make sure the folder where your plugin is is in the plugin loading path
+(see plugin search path section in this document), after that run::
+
+    python3 -m unittest discover -s path-to-your-plugin
+
+for example to test the hello world command run::
+
+    python3 -m unittest discover -s plugins/helloworld
+
 dependencies
 ------------
 
