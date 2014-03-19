@@ -293,5 +293,40 @@ class PbtTestCase(unittest.TestCase):
         self.assertRaises(CommandNotFoundError,
                 global_ctx.get_command_docs, "not-existing")
 
+    def test_plugins_dir_paths_works_without_env_plugin_path(self):
+        ctx = Context(env={})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+
+    def test_plugins_dir_paths_works_with_empty_env_plugin_path(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": ""})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+
+    def test_plugins_dir_paths_works_with_one_env_plugin_path(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": "foo"})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
+            "foo"])
+
+    def test_plugins_dir_paths_works_with_one_env_plugin_path_with_spaces(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": "foo  "})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
+            "foo"])
+
+    def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_colon(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": "foo:"})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
+            "foo"])
+
+    def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_garbage(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo:::::   :"})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
+            "foo"])
+
+    def test_plugins_dir_paths_works_with_multiple_env_plugin_paths_with_extra_garbage(self):
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo::::bar: baz  :"})
+        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
+            "foo", "bar", "baz"])
+
+
+
 if __name__ == "__main__":
     unittest.main()

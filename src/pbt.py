@@ -156,31 +156,42 @@ class Context:
         self.fetch_resource(url, path)
         return url, path
 
-    def load_plugins(self, plugins_dir_path=None):
-        """return the path to the plugins folder"""
-        if plugins_dir_path is None:
-            plugins_dir_path = self.join_config("plugins")
+    @property
+    def plugins_dir_paths(self):
+        """return the list of places to look for plugins"""
+
+        paths = self.env.get("PBT_PLUGINS_PATH", "")
+        result = [path.strip() for path in paths.split(":") if path.strip()]
+
+        result.insert(0, self.join_config("plugins"))
+
+        return result
+
+    def load_plugins(self):
+        """load plugins and return loaded modules and errors"""
+        plugins_dir_paths =  self.plugins_dir_paths
 
         errors = []
         modules = []
-        if os.path.isdir(plugins_dir_path):
-            _dirpath, dirnames, _filenames = next(os.walk(plugins_dir_path))
-            for dirname in dirnames:
-                mod_name = os.path.basename(dirname)
-                plugin_dir = os.path.join(plugins_dir_path, dirname)
-                entry_point = os.path.join(plugin_dir, "main.py")
-                try:
-                    plugin = imp.load_source(mod_name, entry_point)
-                    entry_fun = getattr(plugin, "on_load", None)
+        for plugins_dir_path in plugins_dir_paths:
+            if os.path.isdir(plugins_dir_path):
+                _dirpath, dirnames, _filenames = next(os.walk(plugins_dir_path))
+                for dirname in dirnames:
+                    mod_name = os.path.basename(dirname)
+                    plugin_dir = os.path.join(plugins_dir_path, dirname)
+                    entry_point = os.path.join(plugin_dir, "main.py")
+                    try:
+                        plugin = imp.load_source(mod_name, entry_point)
+                        entry_fun = getattr(plugin, "on_load", None)
 
-                    if entry_fun:
-                        entry_fun(self, plugin_dir)
-                    else:
-                        self.log.warn("Plugin %s has no on_load" % mod_name)
+                        if entry_fun:
+                            entry_fun(self, plugin_dir)
+                        else:
+                            self.log.warn("Plugin %s has no on_load" % mod_name)
 
-                    modules.append(plugin)
-                except Exception as error:
-                    errors.append(error)
+                        modules.append(plugin)
+                    except Exception as error:
+                        errors.append(error)
 
         return modules, errors
 
