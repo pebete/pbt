@@ -50,7 +50,7 @@ def just_description(ctx, args):
 @command(runs_in_project=False, name="full-docs")
 def full_docs(ctx, args):
     """this command not only has just a description
-    
+
     but also some extended documentation
     and this is the last line"""
     pass
@@ -75,8 +75,8 @@ class PbtTestCase(unittest.TestCase):
     def test_build_plugin_file_path(self):
         ctx = Context()
         path = ctx.path_to_plugin_file("new", "templates.json")
-        expected = os.path.expanduser("~/.config/pbt/plugins/new/templates.json")
-        self.assertEqual(path, expected)
+        #expected a path, but only check the last folders
+        self.assertTrue("plugins/new/templates.json" in path)
 
     def test_build_url_plugin_file_path(self):
         ctx = Context()
@@ -93,7 +93,7 @@ class PbtTestCase(unittest.TestCase):
     def test_fetch_plugin_file(self):
         ctx = Context()
         resulting_dirname = []
-        resulting_url = [] 
+        resulting_url = []
         resulting_path = []
 
         def dummy_ensure_dir_exists(dirname):
@@ -194,7 +194,7 @@ class PbtTestCase(unittest.TestCase):
             pass
 
         self.assertEqual(log.debugs, ["Looking for '/foo/bar/project.pbt'",
-            "Looking for '/foo/project.pbt'", "Looking for '/project.pbt'"]) 
+            "Looking for '/foo/project.pbt'", "Looking for '/project.pbt'"])
 
     def test_load_null_project(self):
         log = FakeLogger()
@@ -203,7 +203,7 @@ class PbtTestCase(unittest.TestCase):
                 ctx.project_descriptor_name)
         project = ctx.parse_project_descriptor(path)
         settings = project.settings
-        
+
         self.assertEqual(project.organization, "no-organization")
         self.assertEqual(project.name, "no-name")
         self.assertEqual(project.version, "no-version")
@@ -232,7 +232,7 @@ class PbtTestCase(unittest.TestCase):
         path = os.path.join(TEST_DATA_DIR, ctx.project_descriptor_name)
         project = ctx.parse_project_descriptor(path)
         settings = project.settings
-        
+
         self.assertEqual(project.organization, "pebete")
         self.assertEqual(project.name, "pbt")
         self.assertEqual(project.version, "0.0.1")

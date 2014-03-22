@@ -128,10 +128,24 @@ class Context:
 
     def path_to_plugin_file(self, plugin_name, *path):
         """return the path to a resource from a plugin"""
-        return os.path.join(self.config_dir_path, "plugins", plugin_name, *path)
+        # If the resource is in the default config path return it
+        resource = os.path.join(self.config_dir_path, "plugins",
+                                  plugin_name, *path)
+        if os.path.exists(resource):
+            return resource
+
+        #if the resource doesn't exists look into the environment paths
+        plugins_dir_paths =  self.plugins_dir_paths
+
+        for plugins_dir_path in plugins_dir_paths:
+            if os.path.isdir(plugins_dir_path):
+                fullpath = os.path.join(plugins_dir_path, plugin_name, *path)
+                if os.path.exists(fullpath):
+                    resource = fullpath
+        return resource
 
     def url_to_plugin_file(self, plugin_name, *path):
-        """return the url to a resource from a plugin"""
+        """return the url to a resource from   plugin"""
         return self.registry_url + plugin_name + "/" + "/".join(path)
 
     def fetch_resource(self, url, path):
