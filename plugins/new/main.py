@@ -1,23 +1,22 @@
 import pbt
+
+from json import load
 from pbt_util import install_package
 
-TEMPLATES = [
-{"name": "pysimple", "description": "A simple python template project", "link":"https://github.com/jairot/cookiecutter-simplepypackage"},
-{"name": "pypackage", "description": "Full, github ready, Python project template", "link": "https://github.com/audreyr/cookiecutter-pypackage"},
-{"name": "flask", "description": "A Flask template with Bootstrap 3 and user registration.", "link": "https://github.com/sloria/cookiecutter-flask"},
-{"name": "flask-env", "description": "A lucuma-flavored flask app template", "link": "https://github.com/lucuma/cookiecutter-flask-env"},
-{"name": "simple-django", "description": "template for creating reusable Django projects quickly.", "link": "https://github.com/marcofucci/cookiecutter-simple-django"},
-{"name":"django", "description": "bleeding edge Django project template with Bootstrap 3.", "link": "https://github.com/pydanny/cookiecutter-django"},
-{"name":"djangopackage", "description": "template designed to create PyPI friendly Django apps.", "link": "https://github.com/pydanny/cookiecutter-djangopackage"},
-{"name":"django-cms", "description": "template for Django CMS with simple Bootstrap 3 template.", "link": "https://github.com/palazzem/cookiecutter-django-cms"},
-{"name":"openstack", "description": "template for an OpenStack project.", "link": "https://github.com/openstack-dev/cookiecutter"},
-{"name":"docopt", "description": "template for a Python command-line script that uses docopt for arguments parsing.", "link": "https://github.com/sloria/cookiecutter-docopt"},
-{"name":"django-crud", "description": "template to create a Django app with boilerplate CRUD around a model including a factory and tests.", "link": " https://github.com/wildfish/cookiecutter-django-crud"},
-{"name":"quokka-module", "description": "template to create a blueprint module for Quokka Flask CMS.", "link": "https://github.com/pythonhub/cookiecutter-quokka-module"},
-{"name":"django-lborgav", "description": "Another cookiecutter template for Django project with Booststrap 3 and FontAwesome 4.", "link": "https://github.com/lborgav/cookiecutter-django"}]
-
+@pbt.run_on_load
 def on_load(ctx, path):
-    pass
+    with open(ctx.path_to_plugin_file("new", "templates.json")) as fp:
+        ctx.TEMPLATES = load(fp)
+
+def new_list(ctx):
+    print()
+    for template in ctx.TEMPLATES:
+        print("%s: %s" % (template["name"], template["description"]))
+        print()
+
+def new_update(ctx):
+    ctx.fetch_plugin_file("new", "templates.json")
+
 
 @pbt.command(runs_in_project=False, name="new")
 def main(ctx, args):
@@ -33,30 +32,32 @@ def main(ctx, args):
     the link of a git/mercurial repo that holds your custom template.
 
     """
-    # TODO: find a fuzzy, offline way of listing and finding templates
-    if "list" in args:
-        print()
-        for template in TEMPLATES:
-            print("%s: %s" % (template["name"], template["description"]))
-            print()
-        return
+    subcommands = {"list": new_list, "update": new_update}
+
+    for arg in args:
+        # if a subcommand is found, execute it and finish
+        # this only tales the first command as the valid one
+        if arg in subcommands:
+            subcommands[arg](ctx)
+            return
+
 
     if args:
-        for template in TEMPLATES:
+        for template in ctx.TEMPLATES:
             if template["name"] == args[0]:
                 args[0] = template["link"]
                 break
     else:
-        args.append(TEMPLATES[0]["link"])
+        args.append(ctx.TEMPLATES[0]["link"])
 
     try:
-        import cookiecutter.main as cookiecutter
+        import cookiecutter
     except ImportError:
         install_package("cookiecutter")
-        import cookiecutter.main as cookiecutter
+        import cookiecutter
 
     try:
-        cookiecutter.cookiecutter(args[0])
+        cookiecutter.main.cookiecutter(args[0])
     except FileNotFoundError as err:
         if "'git'" in err.strerror:
             print("Git version control application is needed for this action, "
