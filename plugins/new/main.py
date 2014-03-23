@@ -9,6 +9,16 @@ def on_load(ctx, path):
         ctx.TEMPLATES = load(fp)
     pass
 
+def new_list(ctx):
+    print()
+    for template in ctx.TEMPLATES:
+        print("%s: %s" % (template["name"], template["description"]))
+        print()
+
+def new_update(ctx):
+    ctx.fetch_plugin_file("new", "templates.json")
+
+
 @pbt.command(runs_in_project=False, name="new")
 def main(ctx, args):
     """
@@ -23,13 +33,15 @@ def main(ctx, args):
     the link of a git/mercurial repo that holds your custom template.
 
     """
-    # TODO: find a fuzzy, offline way of listing and finding templates
-    if "list" in args:
-        print()
-        for template in ctx.TEMPLATES:
-            print("%s: %s" % (template["name"], template["description"]))
-            print()
-        return
+    subcommands = {"list": new_list, "update": new_update}
+
+    for arg in args:
+        # if a subcommand is found, execute it and finish
+        # this only tales the first command as the valid one
+        if arg in subcommands:
+            subcommands[arg](ctx)
+            return
+
 
     if args:
         for template in ctx.TEMPLATES:

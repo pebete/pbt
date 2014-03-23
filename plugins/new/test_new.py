@@ -66,3 +66,13 @@ class NewTestCase(unittest.TestCase):
             gctx.run("new", ["https://github.com/god/thisrepodoesnotexist"])
         fakecookie.main.cookiecutter.assert_called_once_with(
             "https://github.com/god/thisrepodoesnotexist")
+
+    def test_new_update(self):
+        gctx.fetch_plugin_file = mock.MagicMock()
+        gctx.run("new", ["update"])
+        gctx.fetch_plugin_file.assert_called_once_with("new", "templates.json")
+
+    def test_new_update_and_list(self):
+        gctx.fetch_plugin_file = mock.MagicMock()
+        gctx.run("new", ["update", "list"])
+        gctx.fetch_plugin_file.assert_called_once_with("new", "templates.json")
