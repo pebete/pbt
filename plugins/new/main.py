@@ -7,7 +7,6 @@ from pbt_util import install_package
 def on_load(ctx, path):
     with open(ctx.path_to_plugin_file("new", "templates.json")) as fp:
         ctx.TEMPLATES = load(fp)
-    pass
 
 def new_list(ctx):
     print()
