@@ -24,8 +24,8 @@ def help_command(ctx, args, print=print):
         try:
             command_docs = ctx.get_command_docs(command_name)
             print(command_docs)
-        except CommandNotFoundError:
-            print("Command {} not found".format(command_name))
+        except pbt.CommandNotFoundError as e:
+            print(e)
     else:
         print("Usage: pbt help [command]")
 
@@ -36,7 +36,7 @@ def dump_command(ctx, args, project, print=print):
     This commands prints back all the information about the project
     that it knows, it serves as a tool to diagnose configuration problems
     and also as an example for a minimal project command"""
-    
+
     data = project.to_data()
     data_str = yaml.dump(data)
     print(data_str)
