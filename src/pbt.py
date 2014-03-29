@@ -383,7 +383,10 @@ global_ctx = Context()
 
 def run(command_name, args):
     """convenience function to run a command on the global context"""
-    global_ctx.run(command_name, args)
+    try:
+        global_ctx.run(command_name, args)
+    except CommandNotFoundError as e:
+        print(e)
 
 def command(runs_in_project=True, name=None):
     """convenience function to wrap a command on the global context"""
