@@ -1,6 +1,5 @@
 """The check plugin: your best friend and your worst nightmare"""
 import pbt
-import pep8
 
 
 @pbt.command(name="check")
@@ -11,5 +10,17 @@ def main(ctx, args, prj):
 
 def check_pep8(ctx, args, prj):
     """The pepocher"""
-    guide = pep8.StyleGuide(parse_argv=False, config_file=True)
+    try:
+        # flake8 seems to be more complete than pep8, so it should be the default
+        import flake8.engine
+
+        checkerFactory= flake8.engine.get_style_guide
+        print("Using Flake8")
+    except ImportError:
+        import pep8
+
+        print("Using pep8")
+        checkerFactory= pep8.StyleGuide
+
+    guide = checkerFactory(parse_argv=False, config_file=True)
     guide.check_files('.')
