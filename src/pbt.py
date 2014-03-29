@@ -25,7 +25,8 @@ class CommandNotFoundError(PbtError):
         return "Command not found '{}'".format(self.command_name)
 
 class ProjectNotFoundError(PbtError):
-    """error that ocurrs when trying to load a project.pbt and it's not found"""
+    """error that ocurrs when trying to load a project.pbt and it's not
+    found"""
 
     def __str__(self):
         return "project.pbt file not found"
@@ -391,4 +392,3 @@ def command(runs_in_project=True, name=None):
 def run_on_load(function):
     """convenience function to wrap a on load function on the global context"""
     return global_ctx.run_on_load(function)
-
