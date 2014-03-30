@@ -8,7 +8,7 @@ env:
 # command to install dependencies
 install:
   - "pip install -r requirements.txt"
-  - "export PBT_PLUGINS_PATH=PBT_PLUGINS_PATH:plugins/"
+  - "export PBT_PLUGINS_PATH=$PBT_PLUGINS_PATH:plugins/"
 
 # command to run tests
-script: python3 -m unittest discover -s test; python3 -m unittest discover -s plugins/new
+script: python3 -m unittest discover -s test; for plugin in plugins/*; do python3 -m unittest discover -s $plugin; done
