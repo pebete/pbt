@@ -1,4 +1,3 @@
-"""example hello world plugin"""
 import pbt
 import sys
 import os
