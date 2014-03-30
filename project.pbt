@@ -10,6 +10,7 @@ license:
 
 authors:
     - Mariano Guerra <mariano@marianoguerra>
+    - jairot <jairotrad@gmail.com>
     - x-ip
     - joac
     - L1pe
