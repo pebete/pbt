@@ -1,7 +1,6 @@
 """test for pbt.py"""
 import os
 import sys
-sys.path.append("src")
 from pbt import *
 import unittest
 

@@ -1,7 +1,6 @@
 """test for pbt_util.py"""
 import sys
-sys.path.append("src")
-import pbt_util
+from pbt import pbt_util
 import unittest
 from unittest.mock import MagicMock
 import shlex

@@ -1,7 +1,7 @@
 import pbt
 
 from json import load
-from pbt_util import install_package
+from pbt.pbt_util import install_package
 
 @pbt.run_on_load
 def on_load(ctx, path):
