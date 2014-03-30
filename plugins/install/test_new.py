@@ -56,7 +56,6 @@ class InstallTestCase(unittest.TestCase):
     def test_install_no_requirements(self):
         fakepip.main = mock.MagicMock()
         fakeos.path.exists = mock.MagicMock(return_value=False)
-        import ipdb; ipdb.set_trace()
         with mock.patch.dict('sys.modules', {"pip": fakepip}):
             with mock.patch.dict('sys.modules', {"os": fakeos}):
                 gctx.run("install", [])
