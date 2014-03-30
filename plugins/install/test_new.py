@@ -15,6 +15,11 @@ class fakepip(object):
     def main():
         pass
 
+class fakeos(object):
+    def path():
+        def exists():
+            pass
+
 class InstallTestCase(unittest.TestCase):
 
     def test_install_is_loaded(self):
@@ -40,11 +45,20 @@ class InstallTestCase(unittest.TestCase):
         fakepip.main.assert_called_once_with(["install", "fakelib"])
 
     def test_install_requirements(self):
-        # This test counts on a requirements.txt file available in the path
-        # in order to make a more deterministic test we should patch
-        # the open and close function and that is not an easy task
         fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=True)
         with mock.patch.dict('sys.modules', {"pip": fakepip}):
-            gctx.run("install", [])
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", [])
         fakepip.main.assert_called_once_with(["install", "-r",
                                               "requirements.txt"])
+
+    def test_install_no_requirements(self):
+        fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=False)
+        import ipdb; ipdb.set_trace()
+        with mock.patch.dict('sys.modules', {"pip": fakepip}):
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", [])
+        # Check that fake pip never get called
+        self.assertEquals(fakepip.main.call_args_list, [])

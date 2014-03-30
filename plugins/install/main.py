@@ -1,6 +1,7 @@
 """example hello world plugin"""
 import pbt
 import sys
+import os
 
 @pbt.command(name="install")
 def install(ctx, args, project):
@@ -19,10 +20,7 @@ def install(ctx, args, project):
         pip.main(["install"] + args)
     else:
         # try to fetch the requirements.txt of the project
-        try:
-            fp = open("requirements.txt")
-            fp.close()
-        except FileNotFoundError:
-            print("there is not requirements.txt file in the current folder")
-        else:
+        if os.path.exists("requirements.txt"):
             pip.main(["install", "-r", "requirements.txt"])
+        else:
+            print("there is not requirements.txt file in the current folder")
