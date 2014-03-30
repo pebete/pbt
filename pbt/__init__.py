@@ -34,7 +34,7 @@ class ProjectNotFoundError(PbtError):
 class ProjectSettings:
     """contains all the settings for a project"""
     def __init__(self, min_version, plugins, repositories, plugin_repositories,
-        entry_point, python_cmd, python_opts, source_paths, test_paths,
+        entry_point, python_cmd, python_opts, packages, scripts, test_paths,
         resource_paths, target_path, python_versions):
 
         self.min_version = min_version
@@ -44,7 +44,8 @@ class ProjectSettings:
         self.entry_point = entry_point
         self.python_cmd = python_cmd
         self.python_opts = python_opts
-        self.source_paths = norm_paths(source_paths)
+        self.packages = norm_paths(packages)
+        self.scripts = norm_paths(scripts)
         self.test_paths = norm_paths(test_paths)
         self.resource_paths = norm_paths(resource_paths)
         self.target_path = os.path.normpath(target_path)
@@ -215,24 +216,6 @@ class Context:
         with open(path) as file_in:
             data = yaml.load(file_in)
 
-        min_version = data.get("min_version", "0.0.1")
-        plugins = data.get("plugins", [])
-        repositories = data.get("repositories", [])
-        plugin_repositories = data.get("plugin_repositories", [])
-        entry_point = data.get("entry_point", ["src/main.py", "main"])
-        python_cmd = data.get("python_cmd", "python3")
-        python_opts = data.get("python_opts", [])
-        source_paths = data.get("source_paths", ["src/"])
-        test_paths = data.get("test_paths", ["test/"])
-        resource_paths = data.get("resource_paths", ["resources/"])
-        target_path = data.get("target_path", "target/")
-        python_versions = data.get("python_versions", [])
-
-        settings = ProjectSettings(min_version, plugins, repositories,
-                plugin_repositories, entry_point, python_cmd, python_opts,
-                source_paths, test_paths, resource_paths, target_path,
-                python_versions)
-
         organization = data.get("organization", "no-organization")
         name = data.get("name", "no-name")
         version = data.get("version", "no-version")
@@ -241,6 +224,26 @@ class Context:
         license = data.get("license", "No license")
         authors = data.get("authors", [])
         dependencies = data.get("dependencies", [])
+
+        min_version = data.get("min_version", "0.0.1")
+        plugins = data.get("plugins", [])
+        repositories = data.get("repositories", [])
+        plugin_repositories = data.get("plugin_repositories", [])
+        python_cmd = data.get("python_cmd", "python3")
+        python_opts = data.get("python_opts", [])
+        packages = data.get("packages", [name])
+        entry_point = data.get("entry_point", ["%s/main.py" % packages[0],
+                                               "main"])
+        scripts = data.get("scripts", [])
+        test_paths = data.get("test_paths", ["test/"])
+        resource_paths = data.get("resource_paths", ["resources/"])
+        target_path = data.get("target_path", "target/")
+        python_versions = data.get("python_versions", [])
+
+        settings = ProjectSettings(min_version, plugins, repositories,
+                plugin_repositories, entry_point, python_cmd, python_opts,
+                packages, scripts, test_paths, resource_paths, target_path,
+                python_versions)
 
         project = Project(organization, name, version, description, url,
                 license, authors, dependencies, settings)

@@ -36,7 +36,10 @@ plugin_repositories:
 #hooks:
 #    - ?
 
-source_paths: ["src"]
+#these two come directly from distutils
+packages: ["pbt"]
+scripts: ["bin/pbt"]
+
 test_paths: ["test"]
 resource_paths: ["resources"]
 entry_point: ["pbt_cli", "run"]
