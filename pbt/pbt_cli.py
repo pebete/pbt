@@ -1,6 +1,6 @@
 """CLI entry point"""
 import pbt
-import pbt_core_commands
+from pbt import pbt_core_commands
 
 USAGE = """Usage: {command} <command> [<command-arg>*]
 

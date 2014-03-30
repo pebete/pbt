@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
 import sys
-import pbt_cli
+from pbt import pbt_cli
 
 pbt_cli.run(sys.argv)

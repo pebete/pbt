@@ -6,7 +6,7 @@ import urllib
 import logging
 import xdg.BaseDirectory
 
-import pbt_util
+from pbt import pbt_util
 
 class PbtError(Exception):
     """pbt base exception, all pbt exceptions inherit from this one, useful
