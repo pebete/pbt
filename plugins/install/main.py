@@ -18,6 +18,7 @@ def install(ctx, args, project):
     if args:
         pip.main(["install"] + args)
     else:
+        # try to fetch the requirements.txt of the project
         try:
             fp = open("requirements.txt")
             fp.close()
