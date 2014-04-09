@@ -72,7 +72,9 @@ class PbtTestCase(unittest.TestCase):
         self.assertIs(ctx.get_command_handler("reverse1"), reverse_with_name)
 
     def test_build_plugin_file_path(self):
-        ctx = Context()
+        current_dir = os.getcwd ()
+        src_plugin_dir = os.path.join (current_dir, 'plugins')
+        ctx = Context(env=dict(PBT_PLUGINS_PATH=src_plugin_dir))
         path = ctx.path_to_plugin_file("new", "templates.json")
         #expected a path, but only check the last folders
         self.assertTrue("plugins/new/templates.json" in path)
