@@ -115,31 +115,26 @@ class Context:
                 self.log.setLevel(logging.INFO)
 
         self.project_descriptor_name = "project.pbt"
+        xdg.BaseDirectory.save_config_path("pbt")
         self._config_dir_path = None
+        xdg.BaseDirectory.save_data_path("pbt/plugins")
 
     @property
     def config_dir_path(self):
         """return the config_dir_path for this context, ensure it exists
         and initialize it the first time it's required"""
         if self._config_dir_path is None:
-            xdg.BaseDirectory.save_config_path("pbt")
             path = xdg.BaseDirectory.load_first_config("pbt")
             self._config_dir_path = path
 
         return self._config_dir_path
 
+
     def path_to_plugin_file(self, plugin_name, *path):
         """return the path to a resource from a plugin"""
-        # If the resource is in the default config path return it
-        resource = os.path.join(self.config_dir_path, "plugins",
-                                  plugin_name, *path)
-        if os.path.exists(resource):
-            return resource
-
-        #if the resource doesn't exists look into the environment paths
-        plugins_dir_paths =  self.plugins_dir_paths
-
-        for plugins_dir_path in plugins_dir_paths:
+        resource = None
+        
+        for plugins_dir_path in self.plugins_dir_paths:
             if os.path.isdir(plugins_dir_path):
                 fullpath = os.path.join(plugins_dir_path, plugin_name, *path)
                 if os.path.exists(fullpath):
@@ -176,11 +171,9 @@ class Context:
     @property
     def plugins_dir_paths(self):
         """return the list of places to look for plugins"""
-
         paths = self.env.get("PBT_PLUGINS_PATH", "")
         result = [os.path.abspath(path.strip()) for path in paths.split(":") if path.strip()]
-
-        result.insert(0, self.join_config("plugins"))
+        result += xdg.BaseDirectory.load_data_paths("pbt/plugins")
 
         return result
 
