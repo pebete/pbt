@@ -3,6 +3,7 @@ import os
 import sys
 from pbt import *
 import unittest
+import xdg.BaseDirectory
 
 TESTS_DIR = os.path.dirname(__file__)
 TEST_DATA_DIR = os.path.abspath(os.path.join(TESTS_DIR, "data"))
@@ -55,6 +56,7 @@ def full_docs(ctx, args):
     pass
 
 class PbtTestCase(unittest.TestCase):
+    xdg_local_dirs = list(xdg.BaseDirectory.load_data_paths("pbt/plugins"))
 
     def test_command_not_found_error_str(self):
         try:
@@ -296,7 +298,7 @@ class PbtTestCase(unittest.TestCase):
 
     def test_plugins_dir_paths_works_without_env_plugin_path(self):
         ctx = Context(env={})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+        self.assertEqual(ctx.plugins_dir_paths, self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_empty_env_plugin_path(self):
         ctx = Context(env={"PBT_PLUGINS_PATH": ""})
