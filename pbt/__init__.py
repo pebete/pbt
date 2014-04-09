@@ -133,12 +133,20 @@ class Context:
     def path_to_plugin_file(self, plugin_name, *path):
         """return the path to a resource from a plugin"""
         resource = None
-        
+
         for plugins_dir_path in self.plugins_dir_paths:
             if os.path.isdir(plugins_dir_path):
                 fullpath = os.path.join(plugins_dir_path, plugin_name, *path)
                 if os.path.exists(fullpath):
                     resource = fullpath
+
+        if resource is None:
+            # no path was found
+            # but we must return at least the user's local one
+            resource = os.path.join(
+                next(xdg.BaseDirectory.load_data_paths("pbt/plugins")),
+                plugin_name, *path)
+
         return resource
 
     def url_to_plugin_file(self, plugin_name, *path):
