@@ -302,33 +302,39 @@ class PbtTestCase(unittest.TestCase):
 
     def test_plugins_dir_paths_works_with_empty_env_plugin_path(self):
         ctx = Context(env={"PBT_PLUGINS_PATH": ""})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+        self.assertEqual(ctx.plugins_dir_paths, self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_spaces(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo  "})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins  "})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_colon(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo:"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins:"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_garbage(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo:::::   :"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::test/data/plugins:::::   :"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_multiple_env_plugin_paths_with_extra_garbage(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo::::bar: baz  :"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo"), os.path.abspath("bar"),
-            os.path.abspath("baz")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::plugins:::test/data/plugins:: pbt  :"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("plugins"),
+                          os.path.abspath("test/data/plugins"),
+                          os.path.abspath("pbt")]+
+                         self.xdg_local_dirs)
 
     def test_on_load_decorator_works(self):
         ctx = Context(env={})
