@@ -258,8 +258,16 @@ for example to test the hello world command run::
 
     python3 -m unittest discover -s plugins/helloworld
 
+resources
+---------
+
+* http://python-packaging-user-guide.readthedocs.org/en/latest/tutorial.html
+* http://www.jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/
+* http://docs.python-guide.org/en/latest/writing/structure/
+* http://www.reddit.com/r/Python/comments/22326i/what_is_the_standard_way_to_organize_a_python/
+* http://learnpythonthehardway.org/book/ex46.html
+
 license
 -------
 
 Apache
-

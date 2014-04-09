@@ -1,18 +1,20 @@
 import pbt
+import cookiecutter
 
 from json import load
-from pbt.pbt_util import install_package
 
 @pbt.run_on_load
 def on_load(ctx, path):
     with open(ctx.path_to_plugin_file("new", "templates.json")) as fp:
         ctx.TEMPLATES = load(fp)
 
+
 def new_list(ctx):
     print()
     for template in ctx.TEMPLATES:
         print("%s: %s" % (template["name"], template["description"]))
         print()
+
 
 def new_update(ctx):
     ctx.fetch_plugin_file("new", "templates.json")
@@ -22,7 +24,8 @@ def new_update(ctx):
 def main(ctx, args):
     """
 
-    new command is powered by cookiecutter and allows you to create environments from predefined and custom templates
+    new command is powered by cookiecutter and allows you to create
+    environments from predefined and custom templates
 
     Usage:
 
@@ -41,7 +44,6 @@ def main(ctx, args):
             subcommands[arg](ctx)
             return
 
-
     if args:
         for template in ctx.TEMPLATES:
             if template["name"] == args[0]:
@@ -51,16 +53,11 @@ def main(ctx, args):
         args.append(ctx.TEMPLATES[0]["link"])
 
     try:
-        import cookiecutter
-    except ImportError:
-        install_package("cookiecutter")
-        import cookiecutter
-
-    try:
         cookiecutter.main.cookiecutter(args[0])
     except FileNotFoundError as err:
         if "'git'" in err.strerror:
-            print("Git version control application is needed for this action, "
-                  "please install it, see instructions at http://git-scm.com/downloads")
+            print("Git version control application is needed for this "
+                  "action, please install it, see instructions at "
+                  "http://git-scm.com/downloads")
         else:
             raise

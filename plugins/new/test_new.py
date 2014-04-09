@@ -29,15 +29,6 @@ class NewTestCase(unittest.TestCase):
         self.assertIn("django", output)
         self.assertIn("flask", output)
 
-    def test_new_cookiecutter_not_available(self):
-        with mock.patch.dict('sys.modules', {"cookiecutter": None}):
-            pbt_util.install_package = mock.MagicMock()
-            try:
-                gctx.run("new", [])
-            except ImportError:
-                pass
-        pbt_util.install_package.assert_called_once_with("cookiecutter")
-
     def test_new_default(self):
         fakecookie.main.cookiecutter = mock.MagicMock()
         with mock.patch.dict('sys.modules', {"cookiecutter": fakecookie}):

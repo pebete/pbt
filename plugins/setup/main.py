@@ -41,8 +41,12 @@ def main(ctx, args, p):
     kvs('scripts', s.scripts)
     kv('license', p.license['name'])
     # TODO: classifiers
+    # TODO: requires
 
     writeln(f, "    )")
     f.close()
 
     print("setup.py file written.")
+
+    # TODO: plugins
+    # according to the Debian Python Policy, they should go in /usr/share/<program>
