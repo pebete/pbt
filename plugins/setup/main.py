@@ -12,7 +12,7 @@ def test_or_compiled_file(path):
     return (('__pycache__' in path) or
             path[-4:] == '.pyc' or
             path[-4:] == '.pyo' or
-            basename(path)[:4] == 'test')
+            basename(path)[:5] == 'test_')
 
 
 def only_interesting_files(l):
@@ -86,11 +86,11 @@ def main(ctx, args, p):
     # dir
 
     # first, make sure the dir exists
-    save_data_path("pbt")
+    # save_data_path("pbt")
 
     # the user's dir comes first
-    plugins = recursive(next(load_data_paths('pbt')), 'plugins/*/*')
-    kvs('data_files', plugins)
+    # plugins = recursive(next(load_data_paths('pbt')), 'plugins/*/*')
+    # kvs('data_files', plugins)
 
     writeln(f, "    )")
     f.close()
