@@ -2,7 +2,7 @@
 import os
 import imp
 import yaml
-import urllib
+from urllib.request import urlretrieve
 import logging
 import xdg.BaseDirectory
 
@@ -176,7 +176,7 @@ class Context:
 
     def fetch_resource(self, url, path):
         """fetch a resource from a url and store it in path"""
-        urllib.urlretrieve(url, path)
+        urlretrieve(url, path)
 
     def ensure_dir_for_file_exists(self, path):
         """ensure directory for file exists, if not create it"""
