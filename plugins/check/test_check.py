@@ -1,7 +1,5 @@
 """test for check plugin"""
-import sys
 import unittest
-sys.path.append("src")
 import pbt
 
 from unittest import mock
@@ -41,7 +39,7 @@ class CheckTestCase(unittest.TestCase):
 
     def test_check_a_file(self):
         fakeguide.check_files = mock.MagicMock()
-        fakeflake8.engine.get_style_guide = mock.MagicMock(return_value= fakeguide)
+        fakeflake8.engine.get_style_guide = mock.MagicMock(return_value=fakeguide)
 
         with mock.patch.dict('sys.modules', {"flake8": fakeflake8}):
             gctx.run("check", ["src/pbt"])
@@ -49,7 +47,6 @@ class CheckTestCase(unittest.TestCase):
         fakeflake8.engine.get_style_guide.assert_called_once_with(parse_argv=False,
                                                                   config_file=True)
         fakeguide.check_files.assert_called_once_with(["src/pbt"])
-
 
     def test_check_two_files(self):
         fakeguide.check_files = mock.MagicMock()
@@ -62,4 +59,3 @@ class CheckTestCase(unittest.TestCase):
                                                                   config_file=True)
         fakeguide.check_files.assert_called_once_with(["plugins/check/main.py",
                                                        "plugins/check/test_check.py"])
-

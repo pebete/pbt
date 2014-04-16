@@ -1,9 +1,9 @@
 """test for pbt_util.py"""
-import sys
 from pbt import pbt_util
 import unittest
 from unittest.mock import MagicMock
 import shlex
+
 
 class PbtUtilTestCase(unittest.TestCase):
 
@@ -12,9 +12,9 @@ class PbtUtilTestCase(unittest.TestCase):
         self.assertEqual(pbt_util.get_dirs_up_to_root("/asd"), ["/asd", "/"])
         self.assertEqual(pbt_util.get_dirs_up_to_root("/asd/"), ["/asd", "/"])
         self.assertEqual(pbt_util.get_dirs_up_to_root("/asd/foo"),
-                ["/asd/foo", "/asd", "/"])
+                         ["/asd/foo", "/asd", "/"])
         self.assertEqual(pbt_util.get_dirs_up_to_root("/asd/foo/"),
-                ["/asd/foo", "/asd", "/"])
+                         ["/asd/foo", "/asd", "/"])
 
     def test_install_package_under_venv(self):
         pbt_util.running_under_virtual_env = MagicMock(return_value=True)
@@ -30,9 +30,9 @@ class PbtUtilTestCase(unittest.TestCase):
         pbt_util.install_package("foo")
         pbt_util.subprocess.check_call.assert_called_with(shlex.split("sudo pip3 install foo"))
 
-        #TODO: Test running_under_virtual_env(). First I should learn how to Mock sys.real_prefix
+        # TODO: Test running_under_virtual_env(). First I should learn how to
+        # Mock sys.real_prefix
 
 
 if __name__ == "__main__":
     unittest.main()
-

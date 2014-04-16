@@ -8,11 +8,13 @@ import xdg.BaseDirectory
 
 from pbt import pbt_util
 
+
 class PbtError(Exception):
     """pbt base exception, all pbt exceptions inherit from this one, useful
     to catch this one to catch pbt specific errors only"""
 
     pass
+
 
 class CommandNotFoundError(PbtError):
     """error that ocurrs when trying to run a command that's not registered"""
@@ -24,6 +26,7 @@ class CommandNotFoundError(PbtError):
     def __str__(self):
         return "Command not found '{}'".format(self.command_name)
 
+
 class ProjectNotFoundError(PbtError):
     """error that ocurrs when trying to load a project.pbt and it's not
     found"""
@@ -31,11 +34,12 @@ class ProjectNotFoundError(PbtError):
     def __str__(self):
         return "project.pbt file not found"
 
+
 class ProjectSettings:
     """contains all the settings for a project"""
     def __init__(self, min_version, plugins, repositories, plugin_repositories,
-        entry_point, python_cmd, python_opts, packages, scripts, test_paths,
-        resource_paths, target_path, python_versions):
+                 entry_point, python_cmd, python_opts, packages, scripts,
+                 test_paths, resource_paths, target_path, python_versions):
 
         self.min_version = min_version
         self.plugins = plugins
@@ -54,19 +58,20 @@ class ProjectSettings:
     def to_data(self):
         """return a data representation of the object"""
         return dict(min_version=self.min_version, plugins=self.plugins,
-                repositories=self.repositories,
-                plugin_repositories=self.plugin_repositories,
-                entry_point=self.entry_point, python_cmd=self.python_cmd,
-                python_opts=self.python_opts, source_paths=self.source_paths,
-                test_paths=self.test_paths,
-                resource_paths=self.resource_paths,
-                target_path=self.target_path,
-                python_versions=self.python_versions)
+                    repositories=self.repositories,
+                    plugin_repositories=self.plugin_repositories,
+                    entry_point=self.entry_point, python_cmd=self.python_cmd,
+                    python_opts=self.python_opts,
+                    source_paths=self.source_paths, test_paths=self.test_paths,
+                    resource_paths=self.resource_paths,
+                    target_path=self.target_path,
+                    python_versions=self.python_versions)
+
 
 class Project:
     """contains information about the project"""
     def __init__(self, organization, name, version, description, url, license,
-            authors, dependencies, settings):
+                 authors, dependencies, settings, path):
 
         self.organization = organization
         self.name = name
@@ -77,20 +82,27 @@ class Project:
         self.authors = authors
         self.dependencies = dependencies
         self.settings = settings
+        self.path = path
 
     def to_data(self):
         """return a data representation of the object"""
         return dict(organization=self.organization, name=self.name,
-                version=self.version, description=self.description,
-                url=self.url, license=self.license, authors=self.authors,
-                dependencies=self.dependencies,
-                settings=self.settings.to_data())
+                    version=self.version, description=self.description,
+                    url=self.url, license=self.license, authors=self.authors,
+                    dependencies=self.dependencies,
+                    settings=self.settings.to_data())
+
+    def join_path(self, *path):
+        """join path using as base path the project base path"""
+        return os.path.join(self.path, *path)
 
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
 
 DEFAULT_REGISTRY_URL = "https://raw.github.com/pebete/registry/master/plugins/"
 logging.basicConfig()
+
+
 class Context:
     """contains all the information to run pbt commands"""
 
@@ -100,7 +112,7 @@ class Context:
         self.on_load_functions = []
         self.log = log if log is not None else logging.getLogger("pbt")
         self.registry_url = self.env.get("PBT_REGISTRY_URL",
-                DEFAULT_REGISTRY_URL)
+                                         DEFAULT_REGISTRY_URL)
 
         if log is None:
             log_file = self.env.get("PBT_LOG_FILE")
@@ -128,7 +140,6 @@ class Context:
             self._config_dir_path = path
 
         return self._config_dir_path
-
 
     def path_to_plugin_file(self, plugin_name, *path):
         """return the path to a resource from a plugin"""
@@ -180,14 +191,15 @@ class Context:
     def plugins_dir_paths(self):
         """return the list of places to look for plugins"""
         paths = self.env.get("PBT_PLUGINS_PATH", "")
-        result = [os.path.abspath(path.strip()) for path in paths.split(":") if path.strip()]
+        result = [os.path.abspath(path.strip())
+                  for path in paths.split(":") if path.strip()]
         result += xdg.BaseDirectory.load_data_paths("pbt/plugins")
 
         return result
 
     def load_plugins(self):
         """load plugins and return loaded modules and errors"""
-        plugins_dir_paths =  self.plugins_dir_paths
+        plugins_dir_paths = self.plugins_dir_paths
 
         self.log.debug("looking for plugins in %s", ":".join(plugins_dir_paths))
         errors = []
@@ -217,6 +229,8 @@ class Context:
         with open(path) as file_in:
             data = yaml.load(file_in)
 
+        project_dir = os.path.abspath(os.path.dirname(path))
+
         organization = data.get("organization", "no-organization")
         name = data.get("name", "no-name")
         version = data.get("version", "no-version")
@@ -241,13 +255,15 @@ class Context:
         target_path = data.get("target_path", "target/")
         python_versions = data.get("python_versions", [])
 
-        settings = ProjectSettings(min_version, plugins, repositories,
-                plugin_repositories, entry_point, python_cmd, python_opts,
-                packages, scripts, test_paths, resource_paths, target_path,
-                python_versions)
+        settings = ProjectSettings(
+            min_version, plugins, repositories, plugin_repositories,
+            entry_point, python_cmd, python_opts, packages, scripts,
+            test_paths, resource_paths, target_path, python_versions
+            )
 
         project = Project(organization, name, version, description, url,
-                license, authors, dependencies, settings)
+                          license, authors, dependencies, settings,
+                          project_dir)
 
         return project
 
@@ -287,7 +303,6 @@ class Context:
 
         for plugin_path in plugins_loaded:
             self.log.debug("Plugin loaded %s" % plugin_path)
-
 
     def run(self, command_name, args, basepath="."):
         """look for a registered command named *command* call it with *args*
@@ -342,13 +357,14 @@ class Context:
                 return doc.strip()
         else:
             raise CommandNotFoundError(command_name)
+
     def register_command(self, name, command_handler, runs_in_project):
         """register a function to be called when command named *name* is
         called"""
         if self.is_command(name):
             self.log.warning("Overriding command named {}, old {}, new {}"
                     .format(name, self.get_command_handler(name),
-                        command_handler))
+                            command_handler))
 
         self.commands[name] = (command_handler, runs_in_project)
 
@@ -376,7 +392,7 @@ class Context:
                 command_name = name
 
             self.register_command(command_name, command_handler,
-                    runs_in_project)
+                                  runs_in_project)
 
             return command_handler
 
@@ -385,6 +401,7 @@ class Context:
 
 global_ctx = Context()
 
+
 def run(command_name, args):
     """convenience function to run a command on the global context"""
     try:
@@ -392,9 +409,11 @@ def run(command_name, args):
     except CommandNotFoundError as e:
         print(e)
 
+
 def command(runs_in_project=True, name=None):
     """convenience function to wrap a command on the global context"""
     return global_ctx.command(runs_in_project, name)
+
 
 def run_on_load(function):
     """convenience function to wrap a on load function on the global context"""

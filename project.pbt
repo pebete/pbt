@@ -18,30 +18,13 @@ authors:
     - Marcos Dione <mdione@grulic.org.ar>
 
 dependencies:
-    # - ["org.python", "requests", "2.0.0"] # just to put something
-    - PyYAML>=3.10
-    - pyxdg>=0.25
-    - flake8>=2.0
-    - cookiecutter>=0.7.0
+    - ["PyYAML", ">=3.10"]
+    - ["pyxdg", ">=0.25"]
+    - ["flake8", ">=2.0"]
+    - ["cookiecutter", ">=0.7.0"]
 
 min_pbt_version: 0.0.1
 
-plugins:
-    - ["marianoguerra", "sphinx", "1.0.0"]
-
-repositories:
-    - ["pypi", "http:/pypi.python.org/"]
-
-plugin_repositories:
-
-    - ["pypi", "http:/pypi.python.org/"]
-
-#local_repo: local_repo
-
-#hooks:
-#    - ?
-
-#these two come directly from distutils
 packages: ["pbt"]
 scripts: ["bin/pbt"]
 
@@ -49,21 +32,3 @@ test_paths: ["test"]
 resource_paths: ["resources"]
 # used for pbt run
 entry_point: ["pbt_cli", "run"]
-
-# support for pbt like plugins
-pbt_plugins: ["plugins/*/*"]
-
-#repl_imports:
-#    - "foo" # import foo
-#    # ? from .. import .., import ... asd ..., from ... import .. as ..
-
-python_cmd: "~/bin/pypy" # use a different python binary
-python_opts: ["-tt"]
-target_path: "target/"
-
-python_versions:
-    - "2.6"
-    - "2.7"
-    - "3.3"
-    - "3.4"
-    - ["pypy", "2.1"]
