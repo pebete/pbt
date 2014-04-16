@@ -1,7 +1,5 @@
 """test for check plugin"""
-import sys
 import unittest
-sys.path.append("src")
 import pbt
 
 from unittest import mock
