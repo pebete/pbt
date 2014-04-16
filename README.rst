@@ -266,6 +266,7 @@ resources
 * http://docs.python-guide.org/en/latest/writing/structure/
 * http://www.reddit.com/r/Python/comments/22326i/what_is_the_standard_way_to_organize_a_python/
 * http://learnpythonthehardway.org/book/ex46.html
+* https://gist.github.com/wickman/2371638
 
 license
 -------
