@@ -17,9 +17,11 @@ def install(ctx, args, project):
 
     if args:
         pip.main(["install"] + args)
+        # TODO: add the new dep to the requierements
     else:
-        # try to fetch the requirements.txt of the project
-        if os.path.exists("requirements.txt"):
-            pip.main(["install", "-r", "requirements.txt"])
-        else:
-            print("there is not requirements.txt file in the current folder")
+        # BUG: this is unconditional, use doit? make?
+        with open ('requirements.txt', 'w+') as f:
+            for dep in ctx.dependencies:
+                f.write (dep)
+
+        pip.main(["install", "-r", "requirements.txt"])

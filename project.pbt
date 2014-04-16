@@ -18,7 +18,11 @@ authors:
     - Marcos Dione <mdione@grulic.org.ar>
 
 dependencies:
-    - ["org.python", "requests", "2.0.0"] # just to put something
+    # - ["org.python", "requests", "2.0.0"] # just to put something
+    - PyYAML>=3.10
+    - pyxdg>=0.25
+    - flake8>=2.0
+    - cookiecutter>=0.7.0
 
 min_pbt_version: 0.0.1
 
@@ -43,7 +47,11 @@ scripts: ["bin/pbt"]
 
 test_paths: ["test"]
 resource_paths: ["resources"]
+# used for pbt run
 entry_point: ["pbt_cli", "run"]
+
+# support for pbt like plugins
+pbt_plugins: ["plugins/*/*"]
 
 #repl_imports:
 #    - "foo" # import foo
