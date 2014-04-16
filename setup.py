@@ -23,12 +23,12 @@ setup(
     scripts=['bin/pbt'],
     license='Apache 2.0',
     data_files=[
-        (join(user_xdg_data_dir, 'install'), ['plugins/install/main.py',]),
-        (join(user_xdg_data_dir, 'run'),     ['plugins/run/main.py',]),
+        (join(user_xdg_data_dir, 'install'), ['plugins/install/main.py', ]),
+        (join(user_xdg_data_dir, 'run'),     ['plugins/run/main.py', ]),
         (join(user_xdg_data_dir, 'new'),     ['plugins/new/main.py',
-                                              'plugins/new/templates.json',]),
-        (join(user_xdg_data_dir, 'check'),   ['plugins/check/main.py',]),
-        (join(user_xdg_data_dir, 'deb'),     ['plugins/deb/main.py',]),
-        (join(user_xdg_data_dir, 'setup'),   ['plugins/setup/main.py']),
+                                              'plugins/new/templates.json', ]),
+        (join(user_xdg_data_dir, 'check'),   ['plugins/check/main.py', ]),
+        (join(user_xdg_data_dir, 'deb'),     ['plugins/deb/main.py', ]),
+        (join(user_xdg_data_dir, 'setup'),   ['plugins/setup/main.py', ]),
         ],
     )
