@@ -1,8 +1,6 @@
 """test for new plugin"""
-import sys
 import unittest
 import pbt
-from pbt import pbt_util
 
 from unittest import mock
 
@@ -11,9 +9,11 @@ from io import StringIO
 gctx = pbt.global_ctx
 gctx.initial_setup()
 
+
 class fakecookie(object):
     def main():
         raise NotImplementedError
+
 
 class NewTestCase(unittest.TestCase):
 
