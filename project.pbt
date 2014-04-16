@@ -25,40 +25,9 @@ dependencies:
 
 min_pbt_version: 0.0.1
 
-plugins:
-    - ["marianoguerra", "sphinx", "1.0.0"]
-
-repositories:
-    - ["pypi", "http:/pypi.python.org/"]
-
-plugin_repositories:
-
-    - ["pypi", "http:/pypi.python.org/"]
-
-#local_repo: local_repo
-
-#hooks:
-#    - ?
-
-#these two come directly from distutils
 packages: ["pbt"]
 scripts: ["bin/pbt"]
 
 test_paths: ["test"]
 resource_paths: ["resources"]
 entry_point: ["pbt_cli", "run"]
-
-#repl_imports:
-#    - "foo" # import foo
-#    # ? from .. import .., import ... asd ..., from ... import .. as ..
-
-python_cmd: "~/bin/pypy" # use a different python binary
-python_opts: ["-tt"]
-target_path: "target/"
-
-python_versions:
-    - "2.6"
-    - "2.7"
-    - "3.3"
-    - "3.4"
-    - ["pypy", "2.1"]
