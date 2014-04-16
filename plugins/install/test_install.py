@@ -1,7 +1,5 @@
 """test for new plugin"""
-import sys
 import unittest
-sys.path.append("src")
 import pbt
 
 from unittest import mock
@@ -11,14 +9,17 @@ from io import StringIO
 gctx = pbt.global_ctx
 gctx.initial_setup()
 
+
 class fakepip(object):
     def main():
         pass
+
 
 class fakeos(object):
     def path():
         def exists():
             pass
+
 
 class InstallTestCase(unittest.TestCase):
 
@@ -29,7 +30,7 @@ class InstallTestCase(unittest.TestCase):
         with mock.patch.dict('sys.modules', {"pip": None}):
             with mock.patch('sys.stdout', StringIO()) as out:
                 try:
-                   gctx.run("install", [])
+                    gctx.run("install", [])
                 except SystemExit:
                     # The plugin must raise a SystemExit
                     self.assertTrue(True)
