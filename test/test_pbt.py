@@ -1,9 +1,9 @@
 """test for pbt.py"""
 import os
 import sys
-sys.path.append("src")
 from pbt import *
 import unittest
+import xdg.BaseDirectory
 
 TESTS_DIR = os.path.dirname(__file__)
 TEST_DATA_DIR = os.path.abspath(os.path.join(TESTS_DIR, "data"))
@@ -56,6 +56,7 @@ def full_docs(ctx, args):
     pass
 
 class PbtTestCase(unittest.TestCase):
+    xdg_local_dirs = list(xdg.BaseDirectory.load_data_paths("pbt/plugins"))
 
     def test_command_not_found_error_str(self):
         try:
@@ -73,7 +74,9 @@ class PbtTestCase(unittest.TestCase):
         self.assertIs(ctx.get_command_handler("reverse1"), reverse_with_name)
 
     def test_build_plugin_file_path(self):
-        ctx = Context()
+        current_dir = os.getcwd ()
+        src_plugin_dir = os.path.join (current_dir, 'plugins')
+        ctx = Context(env=dict(PBT_PLUGINS_PATH=src_plugin_dir))
         path = ctx.path_to_plugin_file("new", "templates.json")
         #expected a path, but only check the last folders
         self.assertTrue("plugins/new/templates.json" in path)
@@ -175,7 +178,7 @@ class PbtTestCase(unittest.TestCase):
         self.assertEqual(settings.entry_point, ["src/pbt_cli.py", "run"])
         self.assertEqual(settings.python_cmd, "~/bin/pypy")
         self.assertEqual(settings.python_opts, ["-tt"])
-        self.assertEqual(settings.source_paths, ["src"])
+        self.assertEqual(settings.packages, ["null"])
         self.assertEqual(settings.test_paths, ["test"])
         self.assertEqual(settings.resource_paths, ["resources"])
         self.assertEqual(settings.target_path, "target")
@@ -217,10 +220,10 @@ class PbtTestCase(unittest.TestCase):
         self.assertEqual(settings.plugins, [])
         self.assertEqual(settings.repositories, [])
         self.assertEqual(settings.plugin_repositories, [])
-        self.assertEqual(settings.entry_point, ["src/main.py", "main"])
+        self.assertEqual(settings.entry_point, ["no-name/main.py", "main"])
         self.assertEqual(settings.python_cmd, "python3")
         self.assertEqual(settings.python_opts, [])
-        self.assertEqual(settings.source_paths, ["src"])
+        self.assertEqual(settings.packages, ["no-name"])
         self.assertEqual(settings.test_paths, ["test"])
         self.assertEqual(settings.resource_paths, ["resources"])
         self.assertEqual(settings.target_path, "target")
@@ -257,7 +260,7 @@ class PbtTestCase(unittest.TestCase):
         self.assertEqual(settings.entry_point, ["src/pbt_cli.py", "run"])
         self.assertEqual(settings.python_cmd, "~/bin/pypy")
         self.assertEqual(settings.python_opts, ["-tt"])
-        self.assertEqual(settings.source_paths, ["src"])
+        self.assertEqual(settings.packages, ["null"])
         self.assertEqual(settings.test_paths, ["test"])
         self.assertEqual(settings.resource_paths, ["resources"])
         self.assertEqual(settings.target_path, "target")
@@ -295,37 +298,43 @@ class PbtTestCase(unittest.TestCase):
 
     def test_plugins_dir_paths_works_without_env_plugin_path(self):
         ctx = Context(env={})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+        self.assertEqual(ctx.plugins_dir_paths, self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_empty_env_plugin_path(self):
         ctx = Context(env={"PBT_PLUGINS_PATH": ""})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins")])
+        self.assertEqual(ctx.plugins_dir_paths, self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_spaces(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo  "})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins  "})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_colon(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": "foo:"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": "test/data/plugins:"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_one_env_plugin_path_with_extra_garbage(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo:::::   :"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::test/data/plugins:::::   :"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("test/data/plugins")]+
+                         self.xdg_local_dirs)
 
     def test_plugins_dir_paths_works_with_multiple_env_plugin_paths_with_extra_garbage(self):
-        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::foo::::bar: baz  :"})
-        self.assertEqual(ctx.plugins_dir_paths, [ctx.join_config("plugins"),
-            os.path.abspath("foo"), os.path.abspath("bar"),
-            os.path.abspath("baz")])
+        ctx = Context(env={"PBT_PLUGINS_PATH": ":::::plugins:::test/data/plugins:: pbt  :"})
+        self.assertEqual(ctx.plugins_dir_paths,
+                         [os.path.abspath("plugins"),
+                          os.path.abspath("test/data/plugins"),
+                          os.path.abspath("pbt")]+
+                         self.xdg_local_dirs)
 
     def test_on_load_decorator_works(self):
         ctx = Context(env={})

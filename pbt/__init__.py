@@ -6,7 +6,7 @@ import urllib
 import logging
 import xdg.BaseDirectory
 
-import pbt_util
+from pbt import pbt_util
 
 class PbtError(Exception):
     """pbt base exception, all pbt exceptions inherit from this one, useful
@@ -34,7 +34,7 @@ class ProjectNotFoundError(PbtError):
 class ProjectSettings:
     """contains all the settings for a project"""
     def __init__(self, min_version, plugins, repositories, plugin_repositories,
-        entry_point, python_cmd, python_opts, source_paths, test_paths,
+        entry_point, python_cmd, python_opts, packages, scripts, test_paths,
         resource_paths, target_path, python_versions):
 
         self.min_version = min_version
@@ -44,7 +44,8 @@ class ProjectSettings:
         self.entry_point = entry_point
         self.python_cmd = python_cmd
         self.python_opts = python_opts
-        self.source_paths = norm_paths(source_paths)
+        self.packages = norm_paths(packages)
+        self.scripts = norm_paths(scripts)
         self.test_paths = norm_paths(test_paths)
         self.resource_paths = norm_paths(resource_paths)
         self.target_path = os.path.normpath(target_path)
@@ -114,35 +115,38 @@ class Context:
                 self.log.setLevel(logging.INFO)
 
         self.project_descriptor_name = "project.pbt"
+        xdg.BaseDirectory.save_config_path("pbt")
         self._config_dir_path = None
+        xdg.BaseDirectory.save_data_path("pbt/plugins")
 
     @property
     def config_dir_path(self):
         """return the config_dir_path for this context, ensure it exists
         and initialize it the first time it's required"""
         if self._config_dir_path is None:
-            xdg.BaseDirectory.save_config_path("pbt")
             path = xdg.BaseDirectory.load_first_config("pbt")
             self._config_dir_path = path
 
         return self._config_dir_path
 
+
     def path_to_plugin_file(self, plugin_name, *path):
         """return the path to a resource from a plugin"""
-        # If the resource is in the default config path return it
-        resource = os.path.join(self.config_dir_path, "plugins",
-                                  plugin_name, *path)
-        if os.path.exists(resource):
-            return resource
+        resource = None
 
-        #if the resource doesn't exists look into the environment paths
-        plugins_dir_paths =  self.plugins_dir_paths
-
-        for plugins_dir_path in plugins_dir_paths:
+        for plugins_dir_path in self.plugins_dir_paths:
             if os.path.isdir(plugins_dir_path):
                 fullpath = os.path.join(plugins_dir_path, plugin_name, *path)
                 if os.path.exists(fullpath):
                     resource = fullpath
+
+        if resource is None:
+            # no path was found
+            # but we must return at least the user's local one
+            resource = os.path.join(
+                next(xdg.BaseDirectory.load_data_paths("pbt/plugins")),
+                plugin_name, *path)
+
         return resource
 
     def url_to_plugin_file(self, plugin_name, *path):
@@ -175,11 +179,9 @@ class Context:
     @property
     def plugins_dir_paths(self):
         """return the list of places to look for plugins"""
-
         paths = self.env.get("PBT_PLUGINS_PATH", "")
         result = [os.path.abspath(path.strip()) for path in paths.split(":") if path.strip()]
-
-        result.insert(0, self.join_config("plugins"))
+        result += xdg.BaseDirectory.load_data_paths("pbt/plugins")
 
         return result
 
@@ -215,24 +217,6 @@ class Context:
         with open(path) as file_in:
             data = yaml.load(file_in)
 
-        min_version = data.get("min_version", "0.0.1")
-        plugins = data.get("plugins", [])
-        repositories = data.get("repositories", [])
-        plugin_repositories = data.get("plugin_repositories", [])
-        entry_point = data.get("entry_point", ["src/main.py", "main"])
-        python_cmd = data.get("python_cmd", "python3")
-        python_opts = data.get("python_opts", [])
-        source_paths = data.get("source_paths", ["src/"])
-        test_paths = data.get("test_paths", ["test/"])
-        resource_paths = data.get("resource_paths", ["resources/"])
-        target_path = data.get("target_path", "target/")
-        python_versions = data.get("python_versions", [])
-
-        settings = ProjectSettings(min_version, plugins, repositories,
-                plugin_repositories, entry_point, python_cmd, python_opts,
-                source_paths, test_paths, resource_paths, target_path,
-                python_versions)
-
         organization = data.get("organization", "no-organization")
         name = data.get("name", "no-name")
         version = data.get("version", "no-version")
@@ -241,6 +225,26 @@ class Context:
         license = data.get("license", "No license")
         authors = data.get("authors", [])
         dependencies = data.get("dependencies", [])
+
+        min_version = data.get("min_version", "0.0.1")
+        plugins = data.get("plugins", [])
+        repositories = data.get("repositories", [])
+        plugin_repositories = data.get("plugin_repositories", [])
+        python_cmd = data.get("python_cmd", "python3")
+        python_opts = data.get("python_opts", [])
+        packages = data.get("packages", [name])
+        entry_point = data.get("entry_point", ["%s/main.py" % packages[0],
+                                               "main"])
+        scripts = data.get("scripts", [])
+        test_paths = data.get("test_paths", ["test/"])
+        resource_paths = data.get("resource_paths", ["resources/"])
+        target_path = data.get("target_path", "target/")
+        python_versions = data.get("python_versions", [])
+
+        settings = ProjectSettings(min_version, plugins, repositories,
+                plugin_repositories, entry_point, python_cmd, python_opts,
+                packages, scripts, test_paths, resource_paths, target_path,
+                python_versions)
 
         project = Project(organization, name, version, description, url,
                 license, authors, dependencies, settings)

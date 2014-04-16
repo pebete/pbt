@@ -42,7 +42,7 @@ entry_point: ["src/pbt_cli.py", "run"]
 
 python_cmd: "~/bin/pypy" # use a different python binary
 python_opts: ["-tt"]
-source_paths: ["src"]
+packages: ["null"]
 test_paths: ["test"]
 resource_paths: ["resources"]
 target_path: "target/"

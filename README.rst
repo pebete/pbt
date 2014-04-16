@@ -47,7 +47,7 @@ examples
 
     /home/mariano/src/pbt/test/data
 
-    $ ../../src/pbt help
+    $ ../../bin/pbt help
 
     Pbt is a tool for working with Python projects.
 
@@ -56,14 +56,14 @@ examples
     dump             dumps all project configuration for the current project
     help             show commands' descriptions or command help if command specified
 
-    $ ../../src/pbt help help
+    $ ../../bin/pbt help help
 
     show commands' descriptions or command help if command specified
 
         pbt help         - displays all available commands with a brief description
         pbt help command - displays detailed help about a command
 
-    $ ../../src/pbt help dump
+    $ ../../bin/pbt help dump
 
     dumps all project configuration for the current project
 
@@ -71,7 +71,7 @@ examples
         that it knows, it serves as a tool to diagnose configuration problems
         and also as an example for a minimal project command
 
-    $ ../../src/pbt dump
+    $ ../../bin/pbt dump
 
     authors: [Mariano Guerra <mariano@marianoguerra>, x-ip, joac, L1pe]
     dependencies:
@@ -103,6 +103,25 @@ examples
       test_paths: [test]
     url: https://github.com/pebete/pbt
     version: 0.0.1
+
+dependencies
+------------
+
+yes, this will be later in the project.pbt
+
+* yaml
+* cookicutter
+* xdg
+* flake8
+
+running for the first time
+--------------------------
+
+``pbt`` is not yet able to boostrap itself, so you need to install it before
+using it. some step are already there::
+
+    $ ./boostrap.sh setup               # this generates setup.py
+    $ python3 setup.py install          # add sudo or --prefix at will
 
 how to implement commands?
 --------------------------
@@ -239,15 +258,6 @@ for example to test the hello world command run::
 
     python3 -m unittest discover -s plugins/helloworld
 
-dependencies
-------------
-
-yes, this will be later in the project.pbt
-
-* yaml
-* cookicutter
-* xdg
-
 resources
 ---------
 
@@ -261,4 +271,3 @@ license
 -------
 
 Apache
-

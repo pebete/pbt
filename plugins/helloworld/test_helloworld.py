@@ -1,6 +1,5 @@
 """test for helloworld plugin"""
 import sys
-sys.path.append("src")
 import pbt
 import unittest
 

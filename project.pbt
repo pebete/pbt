@@ -10,9 +10,12 @@ license:
 
 authors:
     - Mariano Guerra <mariano@marianoguerra>
+    - jairot <jairotrad@gmail.com>
     - x-ip
     - joac
     - L1pe
+    - GiLgAmEzH
+    - Marcos Dione <mdione@grulic.org.ar>
 
 dependencies:
     - ["org.python", "requests", "2.0.0"] # just to put something
@@ -34,7 +37,13 @@ plugin_repositories:
 #hooks:
 #    - ?
 
-entry_point: ["src/pbt_cli.py", "run"]
+#these two come directly from distutils
+packages: ["pbt"]
+scripts: ["bin/pbt"]
+
+test_paths: ["test"]
+resource_paths: ["resources"]
+entry_point: ["pbt_cli", "run"]
 
 #repl_imports:
 #    - "foo" # import foo
@@ -42,9 +51,6 @@ entry_point: ["src/pbt_cli.py", "run"]
 
 python_cmd: "~/bin/pypy" # use a different python binary
 python_opts: ["-tt"]
-source_paths: ["src"]
-test_paths: ["test"]
-resource_paths: ["resources"]
 target_path: "target/"
 
 python_versions:

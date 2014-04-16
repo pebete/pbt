@@ -12,7 +12,6 @@ def main(ctx, args, prj):
 
 def check_pep8(ctx, args, prj):
     """The pepocher"""
-
     guide = flake8.engine.get_style_guide(parse_argv=False, config_file=True)
     if args:
         guide.check_files(args)
