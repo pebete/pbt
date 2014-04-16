@@ -96,6 +96,16 @@ class Project:
         """join path using as base path the project base path"""
         return os.path.join(self.path, *path)
 
+    def run(self):
+        """run the entry point from the project"""
+        entry_point = self.settings.entry_point
+        mod_name, function_name = entry_point
+        file_name = "%s.py" % mod_name
+        module = imp.load_source(mod_name, file_name)
+        function = getattr(module, function_name)
+        return function()
+
+
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
 
