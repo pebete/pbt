@@ -4,7 +4,6 @@ import os
 from glob import glob
 from os.path import join, dirname, basename
 from collections import defaultdict
-from xdg.BaseDirectory import save_data_path, load_data_paths
 import time
 
 

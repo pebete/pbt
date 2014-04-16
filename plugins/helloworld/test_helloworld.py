@@ -1,9 +1,9 @@
 """test for helloworld plugin"""
-import sys
 import pbt
 import unittest
 
 gctx = pbt.global_ctx
+
 
 class HelloWorldTestCase(unittest.TestCase):
 

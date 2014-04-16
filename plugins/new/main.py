@@ -3,6 +3,7 @@ import cookiecutter
 
 from json import load
 
+
 @pbt.run_on_load
 def on_load(ctx, path):
     with open(ctx.path_to_plugin_file("new", "templates.json")) as fp:

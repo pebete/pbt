@@ -4,8 +4,10 @@ import subprocess
 import shlex
 import sys
 
+
 def get_dirs_up_to_root(basepath):
-    """return a list of all the paths that are directories from path up to root"""
+    """return a list of all the paths that are directories from path up to
+    root"""
     path = os.path.normpath(basepath)
     result = [path]
 
@@ -19,6 +21,7 @@ def get_dirs_up_to_root(basepath):
 
     return result
 
+
 def install_package(name_or_link):
     if query_yes_no("Package %s not found, install?" % name_or_link):
         print("trying to install package %s with pip3" % name_or_link)
@@ -29,6 +32,7 @@ def install_package(name_or_link):
         print("Package %s installed" % name_or_link)
     else:
         print("Package %s not installed" % name_or_link)
+
 
 def query_yes_no(question, default="yes"):
     """
@@ -67,6 +71,7 @@ def query_yes_no(question, default="yes"):
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
+
 
 def running_under_virtual_env():
     """ Return True if is acctualy running under a VirtualEnv.

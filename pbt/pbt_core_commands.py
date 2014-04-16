@@ -3,6 +3,7 @@ import yaml
 
 import pbt
 
+
 @pbt.command(runs_in_project=False, name="help")
 def help_command(ctx, args, print=print):
     """show commands' descriptions or command help if command specified
@@ -28,6 +29,7 @@ def help_command(ctx, args, print=print):
             print(e)
     else:
         print("Usage: pbt help [command]")
+
 
 @pbt.command(name="dump")
 def dump_command(ctx, args, project, print=print):
