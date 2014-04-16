@@ -19,8 +19,10 @@ def install(ctx, args, project):
     if args:
         pip.main(["install"] + args)
     else:
-        # try to fetch the requirements.txt of the project
-        if os.path.exists("requirements.txt"):
-            pip.main(["install", "-r", "requirements.txt"])
-        else:
-            print("there is not requirements.txt file in the current folder")
+        deps_spec = ["".join(dep) for dep in project.dependencies]
+        # make it configurable?
+        target_path = project.join_path("deps")
+        ctx.ensure_dir_exists(target_path)
+
+        args = ["install", "-t", target_path] + deps_spec
+        pip.main(args)
