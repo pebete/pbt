@@ -71,7 +71,7 @@ class ProjectSettings:
 class Project:
     """contains information about the project"""
     def __init__(self, organization, name, version, description, url, license,
-                 authors, dependencies, settings):
+                 authors, dependencies, settings, path):
 
         self.organization = organization
         self.name = name
@@ -82,6 +82,7 @@ class Project:
         self.authors = authors
         self.dependencies = dependencies
         self.settings = settings
+        self.path = path
 
     def to_data(self):
         """return a data representation of the object"""
@@ -91,6 +92,9 @@ class Project:
                     dependencies=self.dependencies,
                     settings=self.settings.to_data())
 
+    def join_path(self, *path):
+        """join path using as base path the project base path"""
+        return os.path.join(self.path, *path)
 
 def norm_paths(paths):
     return [os.path.normpath(path) for path in paths]
@@ -225,6 +229,8 @@ class Context:
         with open(path) as file_in:
             data = yaml.load(file_in)
 
+        project_dir = os.path.abspath(os.path.dirname(path))
+
         organization = data.get("organization", "no-organization")
         name = data.get("name", "no-name")
         version = data.get("version", "no-version")
@@ -256,7 +262,8 @@ class Context:
             )
 
         project = Project(organization, name, version, description, url,
-                          license, authors, dependencies, settings)
+                          license, authors, dependencies, settings,
+                          project_dir)
 
         return project
 
