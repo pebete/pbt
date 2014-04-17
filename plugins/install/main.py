@@ -18,7 +18,15 @@ def install(ctx, args, project):
 
     if args:
         pip.main(["install"] + args)
+        # TODO: add the new dep to the requierements
     else:
+        # BUG: this is unconditional, use doit? make?
+        # with open ('requirements.txt', 'w+') as f:
+        #     for dep in ctx.dependencies:
+        #         f.write (dep)
+
+        # pip.main(["install", "-r", "requirements.txt"])
+
         deps_spec = ["".join(dep) for dep in project.dependencies]
         # make it configurable?
         target_path = project.join_path("deps")
