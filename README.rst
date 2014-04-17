@@ -267,6 +267,7 @@ resources
 * http://www.reddit.com/r/Python/comments/22326i/what_is_the_standard_way_to_organize_a_python/
 * http://learnpythonthehardway.org/book/ex46.html
 * https://gist.github.com/wickman/2371638
+* https://www.youtube.com/watch?v=eLPiPHr6TVI
 
 license
 -------
