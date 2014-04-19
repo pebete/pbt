@@ -1,6 +1,7 @@
 """test for new plugin"""
 import unittest
 import pbt
+import os
 
 from unittest import mock
 
@@ -51,7 +52,8 @@ class InstallTestCase(unittest.TestCase):
             with mock.patch.dict('sys.modules', {"os": fakeos}):
                 gctx.run("install", [])
         # TODO: auto sync the deps listed in proyects
-        fakepip.main.assert_called_once_with(['install', '-t', '/vagrant/deps',
+        fakepip.main.assert_called_once_with(['install', '-t',
+                                              os.getcwd() + "/deps",
                                               'PyYAML>=3.10', 'pyxdg>=0.25',
                                               'flake8>=2.0',
                                               'cookiecutter>=0.7.0'])
