@@ -1,6 +1,7 @@
 """test for new plugin"""
 import unittest
 import pbt
+import os
 
 from unittest import mock
 
@@ -34,7 +35,6 @@ class InstallTestCase(unittest.TestCase):
                 except SystemExit:
                     # The plugin must raise a SystemExit
                     self.assertTrue(True)
-
                 output = out.getvalue().strip()
         self.assertIn("http://www.pip-installer.org/en/latest/installing.html",
                       output)
@@ -51,14 +51,9 @@ class InstallTestCase(unittest.TestCase):
         with mock.patch.dict('sys.modules', {"pip": fakepip}):
             with mock.patch.dict('sys.modules', {"os": fakeos}):
                 gctx.run("install", [])
-        fakepip.main.assert_called_once_with(["install", "-r",
-                                              "requirements.txt"])
-
-    def test_install_no_requirements(self):
-        fakepip.main = mock.MagicMock()
-        fakeos.path.exists = mock.MagicMock(return_value=False)
-        with mock.patch.dict('sys.modules', {"pip": fakepip}):
-            with mock.patch.dict('sys.modules', {"os": fakeos}):
-                gctx.run("install", [])
-        # Check that fake pip never get called
-        self.assertEquals(fakepip.main.call_args_list, [])
+        # TODO: auto sync the deps listed in proyects
+        fakepip.main.assert_called_once_with(['install', '-t',
+                                              os.getcwd() + "/deps",
+                                              'PyYAML>=3.10', 'pyxdg>=0.25',
+                                              'flake8>=2.0',
+                                              'cookiecutter>=0.7.0'])
