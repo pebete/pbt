@@ -11,4 +11,12 @@ install:
   - "export PBT_PLUGINS_PATH=$PBT_PLUGINS_PATH:plugins/"
 
 # command to run tests
-script: python3 -m unittest discover -s test; for plugin in plugins/*; do python3 -m unittest discover -s $plugin; done
+# Don't change the way that the test are called
+script: 
+  - "python3 -m unittest discover -s test/"
+  - "python3 -m unittest discover -s plugins/new"
+  - "python3 -m unittest discover -s plugins/check"
+  - "python3 -m unittest discover -s plugins/install"
+  - "python3 -m unittest discover -s plugins/run"
+  - "python3 -m unittest discover -s plugins/setup"
+
