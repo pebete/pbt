@@ -1,6 +1,6 @@
 import pbt
-import cookiecutter
 
+from cookiecutter.main import cookiecutter
 from json import load
 
 
@@ -54,7 +54,7 @@ def main(ctx, args):
         args.append(ctx.TEMPLATES[0]["link"])
 
     try:
-        cookiecutter.main.cookiecutter(args[0])
+        cookiecutter(args[0])
     except FileNotFoundError as err:
         if "'git'" in err.strerror:
             print("Git version control application is needed for this "
