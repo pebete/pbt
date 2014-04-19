@@ -12,10 +12,11 @@ install:
 
 # command to run tests
 # Don't change the way that the test are called
-script: python3 -m unittest discover -s tests
-script: python3 -m unittest discover -s plugins/new
-script: python3 -m unittest discover -s plugins/check
-script: python3 -m unittest discover -s plugins/install
-script: python3 -m unittest discover -s plugins/run
-script: python3 -m unittest discover -s plugins/setup
+script: 
+  - "python3 -m unittest discover -s tests"
+  - "python3 -m unittest discover -s plugins/new"
+  - "python3 -m unittest discover -s plugins/check"
+  - "python3 -m unittest discover -s plugins/install"
+  - "python3 -m unittest discover -s plugins/run"
+  - "python3 -m unittest discover -s plugins/setup"
 
