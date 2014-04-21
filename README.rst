@@ -17,111 +17,29 @@ needs.
 pbt will provide the default setup and workflow with sensible defaults, but the
 idea is that you can tweak every aspect if you need it.
 
-how?
-----
 
-::
-
-    # list of registered command
-
-    pbt help
-
-    # help for dump command
-
-    pbt help dump
-
-    # dump of all the information about the current project
-
-    pbt dump
-
-    # run <command> passing args
-
-    pbt <command> [<arg>*]
-
-examples
---------
-
-::
-
-    $ pwd
-
-    /home/mariano/src/pbt/test/data
-
-    $ ../../bin/pbt help
-
-    Pbt is a tool for working with Python projects.
-
-    Several tasks are available:
-
-    dump             dumps all project configuration for the current project
-    help             show commands' descriptions or command help if command specified
-
-    $ ../../bin/pbt help help
-
-    show commands' descriptions or command help if command specified
-
-        pbt help         - displays all available commands with a brief description
-        pbt help command - displays detailed help about a command
-
-    $ ../../bin/pbt help dump
-
-    dumps all project configuration for the current project
-
-        This commands prints back all the information about the project
-        that it knows, it serves as a tool to diagnose configuration problems
-        and also as an example for a minimal project command
-
-    $ ../../bin/pbt dump
-
-    authors: [Mariano Guerra <mariano@marianoguerra>, x-ip, joac, L1pe]
-    dependencies:
-    - [org.python, requests, 2.0.0]
-    description: python build tool
-    license: {name: Apache 2.0, url: 'http://opensource.org/licenses/Apache-2.0'}
-    name: pbt
-    organization: pebete
-    settings:
-      entry_point: [src/pbt_cli.py, run]
-      min_version: 0.0.1
-      plugin_repositories:
-      - [pypi, 'http:/pypi.python.org/']
-      plugins:
-      - [marianoguerra, sphinx, 1.0.0]
-      python_cmd: ~/bin/pypy
-      python_opts: [-tt]
-      python_versions:
-      - '2.6'
-      - '2.7'
-      - '3.3'
-      - '3.4'
-      - [pypy, '2.1']
-      repositories:
-      - [pypi, 'http:/pypi.python.org/']
-      resource_paths: [resources]
-      source_paths: [src]
-      target_path: target
-      test_paths: [test]
-    url: https://github.com/pebete/pbt
-    version: 0.0.1
-
-dependencies
+Install pbt
 ------------
 
-yes, this will be later in the project.pbt
-
-* yaml
-* cookicutter
-* xdg
-* flake8
-
-Installation
--------------
+To install pbt run the following commands:::
 
     $ git clone https://www.github.com/pebete/pbt
     $ cd pbt
     $ python3 setup.py install          # add sudo or --prefix at will
 
-and that's almost all there's to writing a plugin
+and that's all now you can start using pbt. 
+
+Basic usage
+-----------
+
+::
+    $ pbt try flask                         # opens an ipython console with flask available to try
+    $ pbt new flask                         # makes a flask project from a template 
+    $ cd flask
+    $ pbt run                               # runs the flask app from the entry point in project.pbt
+    $ pbt check                             # checks the code with flake8
+    $ pbt test                              # run the tests 
+    $ pbt setup                             # makes the setup.py file from project.pbt
 
 testing
 -------
@@ -130,6 +48,13 @@ to run pbt core tests run from pbt base folder::
 
     $ python3 -m unittest discover -s test
 
+dependencies
+------------
+
+* yaml
+* cookicutter
+* xdg
+* flake8
 
 resources
 ---------
