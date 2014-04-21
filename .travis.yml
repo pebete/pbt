@@ -4,7 +4,7 @@ python:
 #Make two builds one for testing and the other as a user setup
 env:
   - SYSTEM=false
-  - SYSTEM=True
+  - SYSTEM=true
 
 # command to install dependencies
 install:
