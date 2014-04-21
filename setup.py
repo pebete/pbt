@@ -12,7 +12,7 @@ from xdg.BaseDirectory import save_data_path, load_data_paths
 save_data_path("pbt")
 
 # the user's dir comes first
-user_xdg_data_dir = next(load_data_paths('pbt/plugins'))
+user_xdg_data_dir = next(load_data_paths('pbt/plugins/'))
 
 setup(
     name='pbt',
@@ -28,7 +28,6 @@ setup(
         (join(user_xdg_data_dir, 'new'),     ['plugins/new/main.py',
                                               'plugins/new/templates.json', ]),
         (join(user_xdg_data_dir, 'check'),   ['plugins/check/main.py', ]),
-        (join(user_xdg_data_dir, 'deb'),     ['plugins/deb/main.py', ]),
         (join(user_xdg_data_dir, 'setup'),   ['plugins/setup/main.py', ]),
         ],
     )
