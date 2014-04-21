@@ -1,6 +1,8 @@
 pbt
 ===
 
+[![Build Status](https://travis-ci.org/pebete/pbt.png)](https://travis-ci.org/pebete/pbt)
+
 Python build tool
 
 what?
