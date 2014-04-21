@@ -1,7 +1,7 @@
 pbt
 ===
 
-[![Build Status](https://travis-ci.org/pebete/pbt.png)](https://travis-ci.org/pebete/pbt)
+.. image:: https://travis-ci.org/pebete/pbt.svg?branch=master   :target: https://travis-ci.org/pebete/pbt
 
 Python build tool
 
