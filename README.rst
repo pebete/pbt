@@ -21,7 +21,7 @@ idea is that you can tweak every aspect if you need it.
 Install pbt
 ------------
 
-To install pbt run the following commands:::
+To install pbt run the following commands::
 
     $ git clone https://www.github.com/pebete/pbt
     $ cd pbt
@@ -32,14 +32,15 @@ and that's all now you can start using pbt.
 Basic usage
 -----------
 
-::
-    $ pbt try flask                         # opens an ipython console with flask available to try
-    $ pbt new flask                         # makes a flask project from a template 
+you can check the power of pbt witg this commands ::
+
+    $ pbt try flask                     # opens an ipython console with flask available to try
+    $ pbt new flask                     # makes a flask project from a template 
     $ cd flask
-    $ pbt run                               # runs the flask app from the entry point in project.pbt
-    $ pbt check                             # checks the code with flake8
-    $ pbt test                              # run the tests 
-    $ pbt setup                             # makes the setup.py file from project.pbt
+    $ pbt run                           # runs the flask app from the entry point in project.pbt
+    $ pbt check                          # checks the code with flake8
+    $ pbt test                          # run the tests 
+    $ pbt setup                          # makes the setup.py file from project.pbt
 
 testing
 -------
