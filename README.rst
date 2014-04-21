@@ -33,14 +33,25 @@ Basic usage
 -----------
 
 you can check the power of pbt witg this commands ::
-
-    $ pbt try flask                     # opens an ipython console with flask available to try
-    $ pbt new flask                     # makes a flask project from a template 
+    
+    # opens an ipython console with flask available to try
+    $ pbt try flask
+    
+    # makes a flask project from a template 
+    $ pbt new flask                    
+    
+    # runs the flask app from the entry point in project.pbt
     $ cd flask
-    $ pbt run                           # runs the flask app from the entry point in project.pbt
-    $ pbt check                          # checks the code with flake8
-    $ pbt test                          # run the tests 
-    $ pbt setup                          # makes the setup.py file from project.pbt
+    $ pbt run                           
+    
+    # checks the code with flake8
+    $ pbt check                         
+    
+    # run the tests 
+    $ pbt test                        
+    
+    # makes the setup.py file from project.pbt  
+    $ pbt setup                        
 
 testing
 -------
