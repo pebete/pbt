@@ -1,22 +1,24 @@
 language: python
 python:
   - "3.3"
-
+#Make two builds one for testing and the other as a user setup
 env:
-  - CFLAGS="-O0"
+  - SYSTEM=false
+  - SYSTEM=True
 
 # command to install dependencies
 install:
-  - "pip install -r requirements.txt"
-  - "export PBT_PLUGINS_PATH=$PBT_PLUGINS_PATH:plugins/"
+  - 'if [ "$SYSTEM" = false ] ; then pip install -r requirements.txt; fi'
+  - 'if [ "$SYSTEM" = false ] ; then export PBT_PLUGINS_PATH=$PBT_PLUGINS_PATH:plugins/; fi'
 
 # command to run tests
 # Don't change the way that the test are called
 script: 
-  - "python3 -m unittest discover -s test/"
-  - "python3 -m unittest discover -s plugins/new"
-  - "python3 -m unittest discover -s plugins/check"
-  - "python3 -m unittest discover -s plugins/install"
-  - "python3 -m unittest discover -s plugins/run"
-  - "python3 -m unittest discover -s plugins/setup"
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s test/; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/new; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/check; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/install; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/run; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/setup; fi'
+  - 'if [ "$SYSTEM" = true ] ; then python3 setup.py install; fi'
 
