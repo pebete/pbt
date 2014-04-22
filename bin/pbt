@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 import sys
-from pbt import pbt_cli
+try:
+    from pbt import pbt_cli
+except ImportError as error:
+    if error.name in {"yaml", "xdg", "cookiecutter", "flake8"}:
+        print("Missing Dependencies, trying to install them")
+        import pip
+        # TODO:  install in $XDG_CONFIG/pbt/deps and add path there?
+        pip.main(["install", "-t", ".", "PyYAML", "pyxdg", "cookiecutter", "flake8"])
+        sys.path.append(".")
+        from pbt import pbt_cli
 
 pbt_cli.run(sys.argv)
