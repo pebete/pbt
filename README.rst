@@ -1,7 +1,7 @@
 pbt
 ===
 
-.. image:: https://travis-ci.org/pebete/pbt.svg?branch=master   :target: https://travis-ci.org/pebete/pbt
+.. image:: https://travis-ci.org/pebete/pbt.svg?branch=master 
 
 Python build tool
 
