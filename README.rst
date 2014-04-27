@@ -43,8 +43,11 @@ you can check the power of pbt witg this commands ::
     # makes a flask project from a template 
     $ pbt new flask                    
     
+    # install deps listed on project.pbt
+    $ cd myflaskapp
+    $ pbt install
+
     # runs the flask app from the entry point in project.pbt
-    $ cd flask
     $ pbt run                           
     
     # checks the code with flake8
