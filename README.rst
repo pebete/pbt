@@ -34,7 +34,7 @@ and that's all now you can start using pbt.
 Basic usage
 -----------
 
-you can check the power of pbt witg this commands ::
+you can check the power of pbt with this commands ::
     
     # opens an ipython console with flask available to try
     $ pbt try flask
