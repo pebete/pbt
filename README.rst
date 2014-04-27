@@ -27,7 +27,6 @@ To install pbt run the following commands::
 
     $ git clone https://www.github.com/pebete/pbt
     $ cd pbt
-    $ pip3 install -r requirements.txt  # this is gonna be fixed soon
     $ python3 setup.py install          # add sudo or --prefix at will
 
 and that's all now you can start using pbt. 
