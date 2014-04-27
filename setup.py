@@ -1,6 +1,9 @@
 #! /usr/bin/env python3
+from setuptools.dist import Distribution
+from setuptools import setup
 
-from distutils.core import setup
+Distribution(dict(setup_requires="pyxdg==0.25"))
+
 from os.path import join
 from xdg.BaseDirectory import save_data_path, load_data_paths
 
@@ -9,7 +12,8 @@ from xdg.BaseDirectory import save_data_path, load_data_paths
 # NOTE: for the time being, we're gonna install them in the user's xdg.data dir
 
 # first, make sure the dir exists
-save_data_path("pbt")
+save_data_path("pbt/")
+save_data_path("pbt/plugins/")
 
 # the user's dir comes first
 user_xdg_data_dir = next(load_data_paths('pbt/plugins/'))
@@ -22,6 +26,7 @@ setup(
     packages=['pbt'],
     scripts=['bin/pbt'],
     license='Apache 2.0',
+    install_requires=["PyYAML==3.10", "flake8==2.0", "cookiecutter==0.7.0", "pyxdg==0.25"],
     data_files=[
         (join(user_xdg_data_dir, 'install'), ['plugins/install/main.py', ]),
         (join(user_xdg_data_dir, 'run'),     ['plugins/run/main.py', ]),

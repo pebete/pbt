@@ -8,18 +8,20 @@ env:
 
 # command to install dependencies
 install:
-  #- 'if [ "$SYSTEM" = false ] ; then pip install -r requirements.txt; fi'
-  - 'pip install -r requirements.txt'
+  - 'if [ "$SYSTEM" = false ] ; then pip install -r requirements.txt; fi'
   - 'if [ "$SYSTEM" = false ] ; then export PBT_PLUGINS_PATH=$PBT_PLUGINS_PATH:plugins/; fi'
 
 # command to run tests
 # Don't change the way that the test are called
 script: 
+  # Unit Testing 
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s test/; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/new; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/check; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/install; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/run; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/setup; fi'
+
+  # Build testing
   - 'if [ "$SYSTEM" = true ] ; then python3 setup.py install; fi'
 

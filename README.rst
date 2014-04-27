@@ -27,7 +27,6 @@ To install pbt run the following commands::
 
     $ git clone https://www.github.com/pebete/pbt
     $ cd pbt
-    $ pip3 install -r requirements.txt  # this is gonna be fixed soon
     $ python3 setup.py install          # add sudo or --prefix at will
 
 and that's all now you can start using pbt. 
@@ -35,7 +34,7 @@ and that's all now you can start using pbt.
 Basic usage
 -----------
 
-you can check the power of pbt witg this commands ::
+you can check the power of pbt with this commands ::
     
     # opens an ipython console with flask available to try
     $ pbt try flask
@@ -43,8 +42,11 @@ you can check the power of pbt witg this commands ::
     # makes a flask project from a template 
     $ pbt new flask                    
     
+    # install deps listed on project.pbt
+    $ cd myflaskapp
+    $ pbt install
+
     # runs the flask app from the entry point in project.pbt
-    $ cd flask
     $ pbt run                           
     
     # checks the code with flake8
