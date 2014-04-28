@@ -21,8 +21,8 @@ Then we install the dependencies::
 pbt needs some environmental variables to work properly::
     
     $ CURRENTDIR=$(pwd)
-    $ export PYTHONPATH="$pwd:$PYTHONPATH"
-    $ export PBT_PLUGINS_PATH="$pwd/plugins"
+    $ export PYTHONPATH="$CURRENTDIR:$PYTHONPATH"
+    $ export PBT_PLUGINS_PATH="$CURRENTDIR/plugins"
 
 Now you can use pbt using the script in the bin folder::
     
