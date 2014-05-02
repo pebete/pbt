@@ -22,10 +22,8 @@ Now you can use pbt using pbt.sh as a proxy::
     
     $ ./pbt.sh help
 
-usage
------
-
-::
+Now you can use pbt using the script in the bin folder::
+    
 
     # list of registered command
 
