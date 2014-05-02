@@ -26,7 +26,7 @@ def pbt_try(lib_to_try):
     banner1='''{0} is installed in a disposable path and ready to test.
     Maybe you should run "import {0}"'''.format(lib_to_try)
     exit_msg= '''Do you like this lib? You can add it to your
-    project with pbt install ;)'''
+    project with "pbt install {}"'''.format(lib_to_try)
     # Installing
     pbt_try_install(lib_to_try)
     # Running iPython
