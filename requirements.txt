@@ -2,3 +2,4 @@ PyYAML==3.10
 pyxdg==0.25
 flake8==2.0
 cookiecutter==0.7.0
+ipython>=1.2.1
