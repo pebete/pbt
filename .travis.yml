@@ -21,6 +21,9 @@ script:
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/install; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/run; fi'
   - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/setup; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/try; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/help; fi'
+  - 'if [ "$SYSTEM" = false ] ; then python3 -m unittest discover -s plugins/dump; fi'
 
   # Build testing
   - 'if [ "$SYSTEM" = true ] ; then python3 setup.py install; fi'
