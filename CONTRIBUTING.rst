@@ -18,36 +18,31 @@ Then we install the dependencies::
 
     $ pip3 install -r requirements.txt # sudo, --prefix or nothing if your are inside a virtualenv
 
-pbt needs some environmental variables to work properly::
+Now you can use pbt using pbt.sh as a proxy::
     
-    $ CURRENTDIR=$(pwd)
-    $ export PYTHONPATH="$CURRENTDIR:$PYTHONPATH"
-    $ export PBT_PLUGINS_PATH="$CURRENTDIR/plugins"
+    $ ./pbt.sh help
 
-Now you can use pbt using the script in the bin folder::
-    
-    $ bin/pbt help
-
-usage
+Usage
 -----
 
 ::
+    
 
     # list of registered command
 
-    bin/pbt help
+    ./pbt.sh help
 
     # help for dump command
 
-    bin/pbt help dump
+    ./pbt.sh help dump
 
     # dump of all the information about the current project
 
-    bin/pbt dump
+    ./pbt.sh dump
 
     # run <command> passing args
 
-    bin/pbt <command> [<arg>*]
+    ./pbt.sh <command> [<arg>*]
 
 
 how to implement commands?
