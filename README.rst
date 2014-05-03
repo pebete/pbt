@@ -63,7 +63,7 @@ testing
 
 to run pbt core tests run from pbt base folder::
 
-    $ python3 -m unittest discover -s test
+    $ ./pbt.sh test
 
 dependencies
 ------------
