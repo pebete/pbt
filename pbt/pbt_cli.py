@@ -19,4 +19,7 @@ def run(args):
         print(format_usage(args[0]))
     else:
         _, command, *command_args = args
-        pbt.run(command, command_args)
+        try:
+            pbt.run(command, command_args)
+        except pbt.ProjectNotFoundError:
+            print("Running a project command outside a pbt project")
