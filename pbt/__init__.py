@@ -62,7 +62,7 @@ class ProjectSettings:
                     plugin_repositories=self.plugin_repositories,
                     entry_point=self.entry_point, python_cmd=self.python_cmd,
                     python_opts=self.python_opts,
-                    source_paths=self.source_paths, test_paths=self.test_paths,
+                    test_paths=self.test_paths,
                     resource_paths=self.resource_paths,
                     target_path=self.target_path,
                     python_versions=self.python_versions)
