@@ -28,11 +28,13 @@ setup(
     license='Apache 2.0',
     install_requires=["PyYAML==3.10", "flake8==2.0", "cookiecutter==0.7.0", "pyxdg==0.25"],
     data_files=[
+        (join(user_xdg_data_dir, 'try'), ['plugins/try/main.py', ]),
         (join(user_xdg_data_dir, 'install'), ['plugins/install/main.py', ]),
         (join(user_xdg_data_dir, 'run'),     ['plugins/run/main.py', ]),
         (join(user_xdg_data_dir, 'new'),     ['plugins/new/main.py',
                                               'plugins/new/templates.json', ]),
         (join(user_xdg_data_dir, 'check'),   ['plugins/check/main.py', ]),
+        (join(user_xdg_data_dir, 'test'),   ['plugins/test/main.py', ]),
         (join(user_xdg_data_dir, 'setup'),   ['plugins/setup/main.py', ]),
         ],
     )
