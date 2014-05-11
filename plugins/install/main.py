@@ -18,8 +18,11 @@ def install(ctx, args, project):
 
     pipargs = ["install"]
 
-    if "-t" in args:
-        t = args.index("-t")
+    if "-t" in args or "--target" in args:
+        if "-t" in args:
+            t = args.index("-t")
+        else:
+            t = args.index("--target")
         # The destination folder is the next element in the list
         folder = args.pop(t+1)
         pipargs.append(args.pop(t))

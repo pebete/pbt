@@ -78,3 +78,12 @@ class InstallTestCase(unittest.TestCase):
         fakepip.main.assert_called_once_with(['install', '-t',
                                               os.getcwd() + "/deps",
                                               'fakelib'])
+    def test_install_lib_custom_folder_long(self):
+        fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=True)
+        with mock.patch.dict('sys.modules', {"pip": fakepip}):
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", ["--target", "deps","fakelib"])
+        fakepip.main.assert_called_once_with(['install', '--target',
+                                              os.getcwd() + "/deps",
+                                              'fakelib'])
