@@ -52,8 +52,38 @@ class InstallTestCase(unittest.TestCase):
             with mock.patch.dict('sys.modules', {"os": fakeos}):
                 gctx.run("install", [])
         # TODO: auto sync the deps listed in proyects
+        fakepip.main.assert_called_once_with(['install',
+                                              'PyYAML>=3.10', 'pyxdg>=0.25',
+                                              'flake8>=2.0',
+                                              'cookiecutter>=0.7.0'])
+
+    def test_install_requirements_custom_folder(self):
+        fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=True)
+        with mock.patch.dict('sys.modules', {"pip": fakepip}):
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", ["-t", "deps"])
         fakepip.main.assert_called_once_with(['install', '-t',
                                               os.getcwd() + "/deps",
                                               'PyYAML>=3.10', 'pyxdg>=0.25',
                                               'flake8>=2.0',
                                               'cookiecutter>=0.7.0'])
+
+    def test_install_lib_custom_folder(self):
+        fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=True)
+        with mock.patch.dict('sys.modules', {"pip": fakepip}):
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", ["-t", "deps","fakelib"])
+        fakepip.main.assert_called_once_with(['install', '-t',
+                                              os.getcwd() + "/deps",
+                                              'fakelib'])
+    def test_install_lib_custom_folder_long(self):
+        fakepip.main = mock.MagicMock()
+        fakeos.path.exists = mock.MagicMock(return_value=True)
+        with mock.patch.dict('sys.modules', {"pip": fakepip}):
+            with mock.patch.dict('sys.modules', {"os": fakeos}):
+                gctx.run("install", ["--target", "deps","fakelib"])
+        fakepip.main.assert_called_once_with(['install', '--target',
+                                              os.getcwd() + "/deps",
+                                              'fakelib'])
