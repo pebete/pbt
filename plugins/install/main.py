@@ -16,21 +16,23 @@ def install(ctx, args, project):
               "http://www.pip-installer.org/en/latest/installing.html")
         sys.exit(0)
 
+    pipargs = ["install"]
+
+    if "-t" in args:
+        t = args.index("-t")
+        # The destination folder is the next element in the list
+        folder = args.pop(t+1)
+        pipargs.append(args.pop(t))
+
+        target_path = project.join_path(folder)
+        ctx.ensure_dir_exists(target_path)
+        pipargs.append(target_path)
+
     if args:
-        pip.main(["install"] + args)
+        pipargs += args
         # TODO: add the new dep to the requierements
     else:
-        # BUG: this is unconditional, use doit? make?
-        # with open ('requirements.txt', 'w+') as f:
-        #     for dep in ctx.dependencies:
-        #         f.write (dep)
-
-        # pip.main(["install", "-r", "requirements.txt"])
-
         deps_spec = ["".join(dep) for dep in project.dependencies]
-        # make it configurable?
-        target_path = project.join_path("deps")
-        ctx.ensure_dir_exists(target_path)
+        pipargs += deps_spec
 
-        args = ["install", "-t", target_path] + deps_spec
-        pip.main(args)
+    pip.main(pipargs)
