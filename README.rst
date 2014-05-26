@@ -36,9 +36,6 @@ Basic usage
 
 you can check the power of pbt with this commands ::
     
-    # opens an ipython console with flask available to try
-    $ pbt try flask
-    
     # makes a flask project from a template 
     $ pbt new flask                    
     
