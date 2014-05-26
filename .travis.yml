@@ -28,9 +28,11 @@ script:
 
   # Build testing
   - 'if [ "$SYSTEM" = true ] ; then python3 setup.py install; fi'
+  - 'if [ "$SYSTEM" = true ] ; then pbt help; fi'
   - 'if [ "$SYSTEM" = true ] ; then echo "myflaskapp" | pbt new; fi'
   - 'if [ "$SYSTEM" = true ] ; then cd myflaskapp; fi'
+  - 'if [ "$SYSTEM" = true ] ; then pbt dump; fi'
   - 'if [ "$SYSTEM" = true ] ; then pbt install; fi'
   - 'if [ "$SYSTEM" = true ] ; then pbt test; fi'
   - 'if [ "$SYSTEM" = true ] ; then pbt check; fi'
-
+  - 'if [ "$SYSTEM" = true ] ; then pbt setup; fi'
